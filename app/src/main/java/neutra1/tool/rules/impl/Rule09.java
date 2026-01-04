@@ -1,0 +1,59 @@
+package neutra1.tool.rules.impl;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import neutra1.tool.models.records.Violation;
+import neutra1.tool.rules.NamingRule;
+
+public class Rule09 extends NamingRule{
+
+    private final String RULE_ID = "MADR09";
+    private final String DESCRIPTION_INDENT = "         ";
+    private final String FILE_LISTING_INDENT = "    " + DESCRIPTION_INDENT;
+
+    public Rule09(){super();}
+
+    @Override
+    public void check(){
+        Map<String, List<Integer>> madrIdToIndicesMap = new HashMap<>();
+        Map<String, List<Integer>> duplicateMap = new HashMap<>();
+        List<Path> pathList= validMadrNames.stream().map(str -> Paths.get(str)).toList();
+        List<String> fileNames = pathList.stream().map(path -> path.getFileName().toString()).toList();
+        List<String> madrIds = fileNames.stream().map(name -> name.split("-")[0]).toList();
+        for (int i = 0; i < madrIds.size(); i++){
+            String currentMadrId = madrIds.get(i);
+            madrIdToIndicesMap.computeIfAbsent(currentMadrId, j -> new ArrayList<>()).add(i);
+        }
+        madrIdToIndicesMap.forEach((key, value) -> {
+            if (value.size() > 1){
+                duplicateMap.put(key, value);
+            }
+        });
+        if (!duplicateMap.isEmpty()){
+            StringBuilder description = new StringBuilder("The following MADR files have duplicate IDs:\n");
+            List<String> keys = Arrays.asList(duplicateMap.keySet().toArray(new String[0]));
+            Collections.sort(keys);
+            for (int i = 0; i < keys.size(); i++){
+                String currentKey = keys.get(i);
+                List<Integer> currentIndices = duplicateMap.get(currentKey);
+                description.append(DESCRIPTION_INDENT).append("For ID number " + currentKey + "\n");
+                for (int j = 0; j < currentIndices.size(); j++){
+                    if (j == currentIndices.size() - 1 && i == keys.size() - 1){
+                        description.append(FILE_LISTING_INDENT).append(validMadrNames.get(currentIndices.get(j)));
+                    }
+                    else {
+                        description.append(FILE_LISTING_INDENT).append(validMadrNames.get(currentIndices.get(j)) + "\n");
+                    }
+                }
+            }
+            reporter.report(new Violation(RULE_ID, description.toString(), -1));
+        }
+    }
+}

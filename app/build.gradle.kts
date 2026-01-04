@@ -45,7 +45,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.tool.App"
+    mainClass = "neutra1.tool.Main"
 }
 
 tasks.named<Test>("test") {
