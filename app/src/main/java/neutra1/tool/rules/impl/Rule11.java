@@ -21,8 +21,7 @@ public class Rule11 extends HeadingRule{
         if (decisionOutcome == null){
             return;
         }
-        HeadingInfo nextHeadingSameLevel = findNextSameLevelHeading(decisionOutcome);
-        String subsequenceDecisionOutcome = getSubsequenceTillNextSameLevelHeading(decisionOutcome, nextHeadingSameLevel);
+        String subsequenceDecisionOutcome = decisionOutcome.getSubsequenceTillNextSameLevelHeading();
         HeadingInfo consequences = getHeadingInfoByText(OptionalSection.CONSEQUENCES.getPermittedTitles(), false);
         HeadingInfo confirmation = getHeadingInfoByText(OptionalSection.CONFIRMATION.getPermittedTitles(), false);
         reportFalseParenthood(RULE_ID_A, subsequenceDecisionOutcome, consequences);

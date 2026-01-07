@@ -13,7 +13,7 @@ public class Rule02 extends SectionRule {
     @Override
     public void check() {
         for (HeadingInfo headingInfo : traverser.getHeadingInfoList()) {
-            if (headingInfo.body().isEmpty() && headingInfo.level() > 1) {
+            if (headingInfo.body().isEmpty() && headingInfo.level() > 1 && headingInfo.getSubsequenceTillNextSameLevelHeading().isBlank()) {
                 reportEmptySection(headingInfo);
             }
             else if (headingInfo.level() == 1){
