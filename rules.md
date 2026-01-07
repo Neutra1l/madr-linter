@@ -5,13 +5,15 @@
 Example: Decision Drivers must have level 2, Consequences level 3 etc  <!-- Done -->
 11. Sections Consequences and Confirmation, if present, must be direct subsections of Decision Outcome <!-- Done -->
 7. No numbers allowed in headings
+14. Outcome Section must come before Pros and Cons section(if any)
 
 # Section rules
 
-02. No sections left empty <!-- Done, not correct yet. Will be redone. -->
+02. No sections left empty <!-- Done -->
 03. Per convention, chosen option is always mentioned first in decision outcome section <!-- Done -->
 04. Chosen alternative must be followed by rationale  <!-- Done -->
 05. Consequences section (if included) should contain both good and bad
+13. Asterisks should be used as list marker, not hyphen (-)
 
 # Naming rules
 
