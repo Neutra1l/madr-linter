@@ -3,8 +3,8 @@ package neutra1.tool.rules.impl;
 import java.util.List;
 
 import neutra1.tool.models.enums.DecisionOutcomeElements;
+import neutra1.tool.models.enums.MandatorySection;
 import neutra1.tool.models.records.HeadingInfo;
-import neutra1.tool.models.records.Section;
 import neutra1.tool.models.records.Violation;
 import neutra1.tool.rules.SectionRule;
 
@@ -19,12 +19,11 @@ public class Rule03 extends SectionRule {
 
     @Override
     public void check() {
-        HeadingInfo headingInfo = getHeadingInfoByText("Decision Outcome");
-        Section decisionOutcome = getSectionByHeading("Decision Outcome");
+        HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles());
         Node nodeDecisionOutcome = findNodeByKeywords(decisionOutcome.body(), DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
         if (nodeDecisionOutcome == null) {
             String description = "Chosen option is missing in the Decision Outcome section (Keyword: Chosen Option or Chosen Alternative)";
-            int lineNumber = headingInfo.startLineNumber();
+            int lineNumber = decisionOutcome.startLineNumber();
             reporter.report(new Violation(RULE_ID_A, description, lineNumber));
             return;
         }
@@ -34,7 +33,7 @@ public class Rule03 extends SectionRule {
         String firstLine = firstNodeLines.get(0);
         if (!DecisionOutcomeElements.CHOSEN_OPTION.matches(firstLine)) {
             String description = "Per convention, Chosen Option is always mentioned first in Decision Outcome section";
-            int lineNumber = getLineNumberByContent(headingInfo,
+            int lineNumber = getLineNumberByContent(decisionOutcome,
                 DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
             reporter.report(new Violation(RULE_ID_B, description, lineNumber));  
         }

@@ -1,7 +1,8 @@
 package neutra1.tool.rules.impl;
 
 import neutra1.tool.models.enums.DecisionOutcomeElements;
-import neutra1.tool.models.records.Section;
+import neutra1.tool.models.enums.MandatorySection;
+import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.Violation;
 import neutra1.tool.rules.SectionRule;
 
@@ -15,7 +16,7 @@ public class Rule04 extends SectionRule {
 
     @Override
     public void check() {
-        Section decisionOutcome = getSectionByHeading("Decision Outcome");
+        HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles());
         if (decisionOutcome.body().isEmpty() || decisionOutcome == null) {
             return;
         }
@@ -30,7 +31,7 @@ public class Rule04 extends SectionRule {
         if (rationaleIndex == -1 || rationaleIndex < chosenOptionIndex) {
             String description = "Rationale for the chosen option must be provided after stating the chosen option.";
             int lineNumber = getLineNumberByContent(
-                getHeadingInfoByText("Decision Outcome"),
+                getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles()),
                 DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
             reporter.report(new Violation(RULE_ID, description, lineNumber));
         }

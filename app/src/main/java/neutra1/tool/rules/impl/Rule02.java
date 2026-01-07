@@ -1,6 +1,6 @@
 package neutra1.tool.rules.impl;
 
-import neutra1.tool.models.records.Section;
+import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.Violation;
 import neutra1.tool.rules.SectionRule;
 
@@ -12,13 +12,23 @@ public class Rule02 extends SectionRule {
     
     @Override
     public void check() {
-        for (Section section : traverser.getSections()) {
-            if (section.body().isEmpty() && section.heading().getLevel() > 1) {
-                String description = "Section '" + section.heading().getText().toString() + "' is empty.";
-                int lineNumber = section.heading().getStartLineNumber();
-                reporter.report(new Violation(RULE_ID, description, lineNumber + 1));
+        for (HeadingInfo headingInfo : traverser.getHeadingInfoList()) {
+            if (headingInfo.body().isEmpty() && headingInfo.level() > 1) {
+                reportEmptySection(headingInfo);
             }
-        } 
+            else if (headingInfo.level() == 1){
+                String content = headingInfo.subsequenceTillEnd();
+                if (content.isBlank()){
+                    reportEmptySection(headingInfo);
+                }
+            }
+        }
+    } 
+    private void reportEmptySection(HeadingInfo headingInfo){
+        String description = "Section '" + headingInfo.text() + "' is empty.";
+        int lineNumber = headingInfo.startLineNumber();
+        reporter.report(new Violation(RULE_ID, description, lineNumber + 1));
     }
-    
 }
+
+

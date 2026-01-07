@@ -3,7 +3,6 @@ package neutra1.tool.rules;
 import java.util.List;
 
 import neutra1.tool.models.records.HeadingInfo;
-import neutra1.tool.models.records.Section;
 
 import com.vladsch.flexmark.util.ast.Node;
 
@@ -16,9 +15,7 @@ public abstract class SectionRule extends AbstractRule {
     }
 
     protected int getLineNumberByContent(HeadingInfo headingInfo, List<String> content) {
-        String headingText = headingInfo.text();
-        Section section = getSectionByHeading(headingText);
-        Node node = findNodeByKeywords(section.body(), content);
+        Node node = findNodeByKeywords(headingInfo.body(), content);
         int startLineNumberOfRelevantNode = node.getStartLineNumber();
         String nodeText = node.getChars().toString();
         String relevantLine = getRelevantLineByKeywords(nodeText, content);
@@ -31,11 +28,16 @@ public abstract class SectionRule extends AbstractRule {
         return startLineNumberOfRelevantNode + 1 + offset + 1;
     }
 
-    protected HeadingInfo getHeadingInfoByText(String headingText) {
-        return traverser.getHeadingInfoList().stream()
-            .filter(headingInfo -> headingInfo.text().equals(headingText))
-            .findAny()
-            .orElse(null);
+    protected HeadingInfo getHeadingInfoByText(List<String> targetHeadingTexts) {
+        for (String targetHeadingText : targetHeadingTexts){
+            for (HeadingInfo headingInfo : traverser.getHeadingInfoList()){
+                String text = headingInfo.text();
+                if (text.equals(targetHeadingText)){
+                    return headingInfo;
+                }
+            }
+        }
+        return null;
     }
 
     protected String getRelevantLineByKeywords(String textBlock, List<String> keywords) {
@@ -60,12 +62,5 @@ public abstract class SectionRule extends AbstractRule {
             }
         }
         return null;
-    }
-
-    protected Section getSectionByHeading(String headingText) {
-        return traverser.getSections().stream()
-            .filter(section -> section.heading().getText().toString().equals(headingText))
-            .findAny()
-            .get();
     }
 }

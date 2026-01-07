@@ -7,7 +7,6 @@ import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.LinkInfo;
 import neutra1.tool.models.records.MetadataInfo;
 import neutra1.tool.models.records.ParagraphInfo;
-import neutra1.tool.models.records.Section;
 
 import com.github.sbaudoin.yamllint.LintProblem;
 import com.github.sbaudoin.yamllint.Linter;
@@ -30,7 +29,6 @@ import lombok.Getter;
 @Getter
 public class ASTTraverser {
 
-    private List<Section> sections;
     private List<String> output;
     private List<HeadingInfo> headingInfoList;
     private List<LinkInfo> linkInfoList;
@@ -42,7 +40,6 @@ public class ASTTraverser {
     private String madrPath;
 
     private ASTTraverser() {
-        this.sections = new ArrayList<>();
         this.output = new ArrayList<>();
         this.headingInfoList = new ArrayList<>();
         this.linkInfoList = new ArrayList<>();
@@ -88,7 +85,6 @@ public class ASTTraverser {
         Parser parser = Parser.builder(options).build();
         this.document = parser.parse(markdown);
         visitor.visit(this.document);
-        buildSections(this.document);
     }
 
     private void visitHeading(Heading heading) {
@@ -100,7 +96,7 @@ public class ASTTraverser {
         int startLineNumber = heading.getStartLineNumber() + 1;
         String subsequenceTillEnd = heading.baseSubSequence(heading.getEndOfLine()).toString();
         
-        headingInfoList.add(new HeadingInfo(text, rawText, anchorRefId, level, startLineNumber, subsequenceTillEnd));
+        headingInfoList.add(new HeadingInfo(text, rawText, anchorRefId, level, startLineNumber, subsequenceTillEnd, buildSection(heading)));
         visitor.visitChildren(heading);
     }
 
@@ -179,29 +175,17 @@ public class ASTTraverser {
         }
     }
 
-    private void buildSections(Node document) {
-        Node currentNode = document.getFirstChild();
-        Section currentSection = null;
+    private List<Node> buildSection(Heading heading){
         List<Node> bodyNodes = new ArrayList<>();
-
-        while (currentNode != null) {
-            if (currentNode instanceof Heading heading) {
-                if (currentSection != null) {
-                    sections.add(new Section(currentSection.heading(), new ArrayList<>(bodyNodes)));
-                    bodyNodes.clear();
-                }
-                currentSection = new Section(heading, new ArrayList<>());
-            } else {
-                if (currentSection != null) {
-                    bodyNodes.add(currentNode);
-                }
+        Node current = heading.getNext();
+        while(current != null){
+            if (current instanceof Heading){
+                return bodyNodes;
             }
-            currentNode = currentNode.getNext();
+            bodyNodes.add(current);
+            current = current.getNext();
         }
-
-        if (currentSection != null) {
-            sections.add(new Section(currentSection.heading(), new ArrayList<>(bodyNodes)));
-        }
+        return bodyNodes;
     }
 
     private static void setMadrPath(String madrPath) {
