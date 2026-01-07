@@ -48,7 +48,7 @@ public class Main implements Runnable {
             new Rule03(),
             new Rule04(),
             new Rule06(),
-            new Rule08(),
+            // new Rule08(),
             new Rule09(),
             new Rule10(),
             new Rule11(),

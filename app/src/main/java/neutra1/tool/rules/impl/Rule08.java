@@ -38,6 +38,9 @@ public class Rule08 extends LinkRule{
         linkLineNumberMap = new HashMap<>();
     }
 
+    /*
+    This shit does not work yet. Will be fixed later.
+     */
     @Override
     public void check(){
         List<LinkInfo> linkInfoList = traverser.getLinkInfoList();

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum OptionalSection {
 
-    PROS_AND_CONS(List.of("Pros and Cons of the Option"), 2, null),
+    PROS_AND_CONS(List.of("Pros and Cons of the Options"), 2, null),
     MORE_INFORMATION(List.of("More Information"), 2, null),
     DECISION_DRIVERS(List.of("Decision Drivers"), 2, null),
     CONSEQUENCES(List.of("Consequences"), 3, MandatorySection.DECISION_OUTCOME.getPermittedTitles()),
