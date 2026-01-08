@@ -4,7 +4,7 @@
 10. Sections Considered Alternatives and Decision Outcome must be immediate subsections of the title. Other optional sections must have heading level conforming to template.
 Example: Decision Drivers must have level 2, Consequences level 3 etc  <!-- Done -->
 11. Sections Consequences and Confirmation, if present, must be direct subsections of Decision Outcome <!-- Done -->
-7. No numbers allowed in headings
+7. No numbers allowed in headings <!-- Done -->
 14. Outcome Section must come before Pros and Cons section(if any)
 
 # Section rules
