@@ -3,6 +3,7 @@ package neutra1.tool.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import neutra1.tool.models.records.BulletListInfo;
 import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.LinkInfo;
 import neutra1.tool.models.records.MetadataInfo;
@@ -12,6 +13,7 @@ import com.github.sbaudoin.yamllint.LintProblem;
 import com.github.sbaudoin.yamllint.Linter;
 import com.github.sbaudoin.yamllint.YamlLintConfig;
 import com.vladsch.flexmark.ast.AutoLink;
+import com.vladsch.flexmark.ast.BulletList;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Link;
 import com.vladsch.flexmark.ast.Paragraph;
@@ -32,6 +34,7 @@ public class ASTTraverser {
     private List<String> output;
     private List<HeadingInfo> headingInfoList;
     private List<LinkInfo> linkInfoList;
+    private List<BulletListInfo> bulletListInfoList;
     private List<MetadataInfo> metadataInfoList;
     private List<ParagraphInfo> paragraphInfoList;
     private NodeVisitor visitor;
@@ -43,6 +46,7 @@ public class ASTTraverser {
         this.output = new ArrayList<>();
         this.headingInfoList = new ArrayList<>();
         this.linkInfoList = new ArrayList<>();
+        this.bulletListInfoList = new ArrayList<>();
         this.metadataInfoList = new ArrayList<>();
         this.paragraphInfoList = new ArrayList<>();
         this.visitor = new NodeVisitor(
@@ -51,7 +55,8 @@ public class ASTTraverser {
             new VisitHandler<>(Link.class, this::visitLink),
             new VisitHandler<>(Reference.class, this::visitReference),
             new VisitHandler<>(AutoLink.class, this::visitAutoLink),
-            new VisitHandler<>(YamlFrontMatterBlock.class, this::visitMetadata)
+            new VisitHandler<>(YamlFrontMatterBlock.class, this::visitMetadata),
+            new VisitHandler<>(BulletList.class, this::visitBulletList)
         );
     }
 
@@ -117,6 +122,11 @@ public class ASTTraverser {
 
         linkInfoList.add(new LinkInfo(url, text, startLineNumber));
         visitor.visitChildren(link);
+    }
+
+    private void visitBulletList(BulletList list){
+        int startLineNumber = list.getStartLineNumber() + 1;
+        bulletListInfoList.add(new BulletListInfo(list, startLineNumber));
     }
 
     private void visitReference(Reference reference) {
