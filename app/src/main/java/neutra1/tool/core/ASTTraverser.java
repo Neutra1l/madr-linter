@@ -3,9 +3,10 @@ package neutra1.tool.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import neutra1.tool.models.records.AutoLinkInfo;
 import neutra1.tool.models.records.BulletListInfo;
 import neutra1.tool.models.records.HeadingInfo;
-import neutra1.tool.models.records.LinkInfo;
+import neutra1.tool.models.records.InlineLinkInfo;
 import neutra1.tool.models.records.MetadataInfo;
 import neutra1.tool.models.records.ParagraphInfo;
 
@@ -33,8 +34,9 @@ public class ASTTraverser {
 
     private List<String> output;
     private List<HeadingInfo> headingInfoList;
-    private List<LinkInfo> linkInfoList;
     private List<BulletListInfo> bulletListInfoList;
+    private List<InlineLinkInfo> inlineLinkInfoList;
+    private List<AutoLinkInfo> autoLinkInfoList;
     private List<MetadataInfo> metadataInfoList;
     private List<ParagraphInfo> paragraphInfoList;
     private NodeVisitor visitor;
@@ -45,16 +47,17 @@ public class ASTTraverser {
     private ASTTraverser() {
         this.output = new ArrayList<>();
         this.headingInfoList = new ArrayList<>();
-        this.linkInfoList = new ArrayList<>();
         this.bulletListInfoList = new ArrayList<>();
+        this.inlineLinkInfoList = new ArrayList<>();
+        this.autoLinkInfoList = new ArrayList<>();
         this.metadataInfoList = new ArrayList<>();
         this.paragraphInfoList = new ArrayList<>();
         this.visitor = new NodeVisitor(
             new VisitHandler<>(Heading.class, this::visitHeading),
             new VisitHandler<>(Paragraph.class, this::visitParagraph),
             new VisitHandler<>(Link.class, this::visitLink),
-            new VisitHandler<>(Reference.class, this::visitReference),
             new VisitHandler<>(AutoLink.class, this::visitAutoLink),
+            new VisitHandler<>(Reference.class, this::visitReference),
             new VisitHandler<>(YamlFrontMatterBlock.class, this::visitMetadata),
             new VisitHandler<>(BulletList.class, this::visitBulletList)
         );
@@ -114,27 +117,33 @@ public class ASTTraverser {
         visitor.visitChildren(paragraph);
     }
 
-    private void visitLink(Link link) {
-        output.add("Link: " + link.getText() + " -> " + link.getUrl());
-        String url = link.getUrl().toString();
-        String text = link.getText().toString();
-        int startLineNumber = link.getStartLineNumber() + 1;
-
-        linkInfoList.add(new LinkInfo(url, text, startLineNumber));
-        visitor.visitChildren(link);
-    }
-
     private void visitBulletList(BulletList list){
         int startLineNumber = list.getStartLineNumber() + 1;
         bulletListInfoList.add(new BulletListInfo(list, startLineNumber));
+        visitor.visitChildren(list);
     }
 
     private void visitReference(Reference reference) {
         output.add("Reference: " + reference.getTitle() + " -> " + reference.getUrl());
+        visitor.visitChildren(reference);
     }
 
-    private void visitAutoLink(AutoLink autoLink) {
-        output.add("Autolink: " + autoLink.getChars());
+    private void visitLink(Link link){
+        output.add("Link rendered: " + link.getText() + " url: " + link.toString());
+        String text = link.getText().toString();
+        String url = link.getUrl().toString();
+        int startLineNumber = link.getStartLineNumber() + 1;
+        inlineLinkInfoList.add(new InlineLinkInfo(text, url, startLineNumber));
+        visitor.visitChildren(link);
+    }
+
+    private void visitAutoLink(AutoLink autoLink){
+        output.add("Auto link:" + autoLink.getUrl());
+        String url = autoLink.getUrl().toString();
+        int startLineNumber = autoLink.getStartLineNumber() + 1;
+
+        autoLinkInfoList.add(new AutoLinkInfo(url, startLineNumber));
+        visitor.visitChildren(autoLink);
     }
 
     private void visitMetadata(YamlFrontMatterBlock metadata){

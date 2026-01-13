@@ -1,6 +1,8 @@
 package neutra1.tool;
 
+import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class Main implements Runnable {
             new Rule04(),
             new Rule06(),
             new Rule07(),
-            // new Rule08(),
+            new Rule08(),
             new Rule09(),
             new Rule10(),
             new Rule11(),
@@ -61,6 +63,15 @@ public class Main implements Runnable {
             rule.check();
         }
         reporter.outputDiagnostics();
+        // URI random;
+        // try{
+        //     random = URI.create("D:\\madr-linter\\madr-samples\\0003-provide-own-madr-tools.md");
+        // }
+        // catch (Exception e){
+        //     random = Paths.get("D:\\madr-linter\\madr-samples\\0003-provide-own-madr-tools.md").toUri();
+        // }
+        // System.out.println("Scheme = " + random.getScheme());
+        // System.out.println(random.getFragment());
     }
 
     public static void main(String[] args) {
