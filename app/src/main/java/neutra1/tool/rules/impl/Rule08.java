@@ -1,12 +1,19 @@
 package neutra1.tool.rules.impl;
 
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.InlineLinkInfo;
 import neutra1.tool.rules.LinkRule;
 
@@ -16,48 +23,72 @@ public class Rule08 extends LinkRule{
     private final String DESCRIPTION_INDENT = "          ";
     private final String LISTING_INDENT = DESCRIPTION_INDENT + "    ";
     private List<String> invalidExternalLinkList;
-    private List<String> unsupportedLinkTypeList;
-    private List<String> invalidDirectoryList;
+    private List<String> invalidPathList;
     private List<String> invalidAnchorLinkList;
-    private Map<String, Integer> responseCodeMap;
     private Map<String, Integer> linkLineNumberMap;
 
     public Rule08() {
         super();
         invalidExternalLinkList = new ArrayList<>();
-        unsupportedLinkTypeList = new ArrayList<>();
-        invalidDirectoryList = new ArrayList<>();
+        invalidPathList = new ArrayList<>();
         invalidAnchorLinkList = new ArrayList<>();
-        responseCodeMap = new HashMap<>();
         linkLineNumberMap = new HashMap<>();
     }
 
-    /*
-    This shit does not work yet. Will be fixed later.
-     */
     @Override
     public void check(){
         List<InlineLinkInfo> inlineLinkInfoList = traverser.getInlineLinkInfoList();
-        List<String> externalLinks = new ArrayList<>();
-        List<String> anchorLinks = new ArrayList<>();
-        List<String> absolutePaths = new ArrayList<>();
-        List<String> relativePaths = new ArrayList<>();
-        String madrPath = Paths.get(traverser.getMadrPath()).getParent().toString();
         for (InlineLinkInfo link : inlineLinkInfoList){
-            String url = link.url();
-            if (isExternalLink(url)){
-                externalLinks.add(url);
+            String urlText = link.url();
+            if (isExternalLink(urlText)){
+                try{
+                    URL url = URI.create(urlText).toURL();
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("HEAD");
+                    conn.setConnectTimeout(5000);
+                    conn.setReadTimeout(5000);
+                    int status = conn.getResponseCode();
+                    if (status < 200 || status > 300){
+                        invalidExternalLinkList.add(urlText);
+                    }
+                }
+                catch (IOException e){
+                    invalidExternalLinkList.add(urlText);
+                }
             }
-            else if (isAnchorLink(url)){
-                anchorLinks.add(url);
+            else if (isAnchorLink(urlText)){
+                List<HeadingInfo> headingInfoList = traverser.getHeadingInfoList();
+                List<String> anchorRefIdList = headingInfoList.stream().map(headingInfo -> headingInfo.anchorRefId()).toList();
+                boolean matches = anchorRefIdList.stream().anyMatch(anchorRefId -> anchorRefId.equals(urlText));
+                if (!matches){
+                    invalidAnchorLinkList.add(urlText);
+                }
             }
-            else if(isAbsolutePath(url)){
-                absolutePaths.add(url);
+            else if(isAbsolutePath(urlText)){
+                try{
+                    Path path = Paths.get(urlText);
+                    if (!Files.exists(path)){
+                        invalidPathList.add(urlText);
+                    }
+                }
+                catch (Exception e){
+                    invalidPathList.add(urlText);
+                }
             }
             else {
-                relativePaths.add(url);
+                try{
+                    Path madrPath = Paths.get(traverser.getMadrPath());
+                    Path resolvedPath = madrPath.resolve(urlText).normalize();
+                    if (!Files.exists(resolvedPath)){
+                        invalidPathList.add(urlText);
+                    }
+                }
+                catch (Exception e){
+                    invalidPathList.add(urlText);
+                }
             }
         }
+        
 
 
 
