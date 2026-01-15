@@ -26,6 +26,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.ast.Reference;
 import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterBlock;
 import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
+import com.vladsch.flexmark.html.HtmlRenderer;
 
 import lombok.Getter;
 
@@ -89,6 +90,7 @@ public class ASTTraverser {
     public void traverse(String markdown) {
         MutableDataSet options = new MutableDataSet();
         options.set(Parser.TRACK_DOCUMENT_LINES, true);
+        options.set(HtmlRenderer.GENERATE_HEADER_ID, true);
         options.set(Parser.EXTENSIONS, List.of(YamlFrontMatterExtension.create()));
         Parser parser = Parser.builder(options).build();
         this.document = parser.parse(markdown);
@@ -103,9 +105,9 @@ public class ASTTraverser {
         int level = heading.getLevel();
         int startLineNumber = heading.getStartLineNumber() + 1;
         String subsequenceTillEnd = heading.baseSubSequence(heading.getEndOfLine()).toString();
-        
         headingInfoList.add(new HeadingInfo(text, rawText, anchorRefId, level, startLineNumber, subsequenceTillEnd, buildSection(heading)));
         visitor.visitChildren(heading);
+
     }
 
     private void visitParagraph(Paragraph paragraph) {
@@ -129,7 +131,7 @@ public class ASTTraverser {
     }
 
     private void visitLink(Link link){
-        output.add("Link rendered: " + link.getText() + " url: " + link.toString());
+        output.add("Link: " + link.getText() + " url: " + link.toString());
         String text = link.getText().toString();
         String url = link.getUrl().toString();
         int startLineNumber = link.getStartLineNumber() + 1;
