@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import neutra1.tool.models.records.HeadingInfo;
-import neutra1.tool.models.records.InlineLinkInfo;
+import neutra1.tool.models.records.LinkInfo;
 import neutra1.tool.models.records.Violation;
 import neutra1.tool.rules.LinkRule;
 
@@ -32,8 +32,8 @@ public class Rule08 extends LinkRule{
 
     @Override
     public void check(){
-        List<InlineLinkInfo> inlineLinkInfoList = traverser.getInlineLinkInfoList();
-        for (InlineLinkInfo link : inlineLinkInfoList){
+        List<LinkInfo> inlineLinkInfoList = traverser.getLinkInfoList();
+        for (LinkInfo link : inlineLinkInfoList){
             String urlText = link.url();
             int lineNumber = link.startLineNumber();
             if (isExternalLink(urlText)){

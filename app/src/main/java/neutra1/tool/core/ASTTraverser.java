@@ -3,11 +3,10 @@ package neutra1.tool.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import neutra1.tool.models.records.AutoLinkInfo;
 import neutra1.tool.models.records.BulletListInfo;
 import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.ImageInfo;
-import neutra1.tool.models.records.InlineLinkInfo;
+import neutra1.tool.models.records.LinkInfo;
 import neutra1.tool.models.records.MetadataInfo;
 import neutra1.tool.models.records.ParagraphInfo;
 
@@ -38,8 +37,7 @@ public class ASTTraverser {
     private List<String> output;
     private List<HeadingInfo> headingInfoList;
     private List<BulletListInfo> bulletListInfoList;
-    private List<InlineLinkInfo> inlineLinkInfoList;
-    private List<AutoLinkInfo> autoLinkInfoList;
+    private List<LinkInfo> linkInfoList;
     private List<MetadataInfo> metadataInfoList;
     private List<ParagraphInfo> paragraphInfoList;
     private List<ImageInfo> imageInfoList;
@@ -52,8 +50,7 @@ public class ASTTraverser {
         this.output = new ArrayList<>();
         this.headingInfoList = new ArrayList<>();
         this.bulletListInfoList = new ArrayList<>();
-        this.inlineLinkInfoList = new ArrayList<>();
-        this.autoLinkInfoList = new ArrayList<>();
+        this.linkInfoList = new ArrayList<>();
         this.metadataInfoList = new ArrayList<>();
         this.paragraphInfoList = new ArrayList<>();
         this.imageInfoList = new ArrayList<>();
@@ -140,7 +137,7 @@ public class ASTTraverser {
         String text = link.getText().toString();
         String url = link.getUrl().toString();
         int startLineNumber = link.getStartLineNumber() + 1;
-        inlineLinkInfoList.add(new InlineLinkInfo(text, url, startLineNumber));
+        linkInfoList.add(new LinkInfo(text, url, startLineNumber));
         visitor.visitChildren(link);
     }
 
@@ -149,7 +146,7 @@ public class ASTTraverser {
         String url = autoLink.getUrl().toString();
         int startLineNumber = autoLink.getStartLineNumber() + 1;
 
-        autoLinkInfoList.add(new AutoLinkInfo(url, startLineNumber));
+        linkInfoList.add(new LinkInfo(null, url, startLineNumber));
         visitor.visitChildren(autoLink);
     }
 
