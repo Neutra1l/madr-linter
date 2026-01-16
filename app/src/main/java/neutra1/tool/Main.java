@@ -61,15 +61,6 @@ public class Main implements Runnable {
             rule.check();
         }
         reporter.outputDiagnostics();
-        // URI random;
-        // try{
-        //     random = URI.create("D:\\madr-linter\\madr-samples\\0003-provide-own-madr-tools.md");
-        // }
-        // catch (Exception e){
-        //     random = Paths.get("D:\\madr-linter\\madr-samples\\0003-provide-own-madr-tools.md").toUri();
-        // }
-        // System.out.println("Scheme = " + random.getScheme());
-        // System.out.println(random.getFragment());
     }
 
     public static void main(String[] args) {
