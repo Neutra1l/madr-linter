@@ -32,10 +32,9 @@ public class Reporter {
         for (Violation v : violationList) {
             if (v.lineNumber() == -1) {
                 System.out.println("[" + v.ruleId() + "] " + v.description());
-                continue;
             }
             else {
-            System.out.println("[" + v.ruleId() + "] Line " + v.lineNumber() + ": " + v.description());
+                System.out.println("[" + v.ruleId() + "] Line " + v.lineNumber() + ": " + v.description());
             }
         }
 

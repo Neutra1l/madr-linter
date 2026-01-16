@@ -1,6 +1,8 @@
 package neutra1.tool;
 
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -28,22 +30,30 @@ import picocli.CommandLine.Parameters;
 
 @Command(
     name = "madrlint",
-    description = "Prints a simple greeting",
-    mixinStandardHelpOptions = true
+    description = "Lint MADR files",
+    mixinStandardHelpOptions = true,
+    version="1.0.0"
 )
 public class Main implements Runnable {
 
-    @Parameters(
-        index = "0",
-        description = "File path to lint"
-    )
+    private final String RESET = "\u001B[0m";
+    private final String RED   = "\u001B[31m";
+
+    @Parameters(index = "0", description = "File path to lint")
     private String filePath;
     @Override
     public void run() {
         ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(filePath);
         Reporter reporter = Reporter.getReporterInstance();
-        astTraverser.traverse(readFile(filePath));
-        astTraverser.getOutput().toString().lines().forEach(System.out::println);
+        try {
+            astTraverser.traverse(readFile(filePath));
+        }
+        catch (IOException ioException){
+            System.out.println(RED + "Error: unable to read input file " + filePath);
+            System.exit(2);
+        }
+
+        // astTraverser.getOutput().toString().lines().forEach(System.out::println);
         List<@NonNull AbstractRule> rules = List.of(
             new Rule01(),
             new Rule02(),
@@ -69,14 +79,16 @@ public class Main implements Runnable {
         int exitCode = new CommandLine(new Main()).execute(args);
         System.exit(exitCode);
     }
-    public static String readFile(String filePath) {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            return content;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+
+    private String readFile(String filePath) throws IOException{
+        Path cwd = Paths.get(System.getProperty("user.dir"));
+        Path path = Paths.get(filePath);
+        if (!path.isAbsolute()){
+            path = cwd.resolve(path);
+        }
+        String content = new String(Files.readAllBytes(path));
+        return content;
     }
     
 }
-}
+

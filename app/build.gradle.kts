@@ -48,6 +48,10 @@ application {
     mainClass = "neutra1.tool.Main"
 }
 
+tasks.named<JavaExec>("run") {
+    workingDir = rootProject.projectDir
+}
+
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
