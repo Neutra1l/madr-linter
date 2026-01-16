@@ -23,7 +23,7 @@ Example: Decision Drivers must have level 2, Consequences level 3 etc  <!-- Done
 # Link rules
 
 08. Inline links must work <!-- Done, but fragile and breaks with external links. Will be revised later -->
-14. Image and image with links must work
+14. Images must work
 
 # Metadata rules
 
