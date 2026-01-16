@@ -19,6 +19,8 @@ Example: Decision Drivers must have level 2, Consequences level 3 etc  <!-- Done
 
 06. Adherence to naming conventions for MADR (The format is as follows: xxxx-decision.md) <!-- Done -->
 09. No collisions of numberings between MADRs in the same folder <!-- Done -->
+15. If the current directory is tracked by Git and has a remote in GitHub, requested changes within pull requests should not introduce new naming violations.
+(Likely difficult, do only if time allows)
 
 # Link rules
 
