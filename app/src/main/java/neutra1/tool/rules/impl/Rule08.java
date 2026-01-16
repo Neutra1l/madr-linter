@@ -19,16 +19,21 @@ import neutra1.tool.rules.LinkRule;
 
 public class Rule08 extends LinkRule{
 
-    private final String RULE_ID = "MADR08";
-    private final String DESCRIPTION_INDENT = "         ";
+    private final String RULE_ID_A = "MADR08a"; 
+    private final String RULE_ID_B = "MADR08b";
+    private final String DESCRIPTION_INDENT = "          ";
     private final String LISTING_INDENT = DESCRIPTION_INDENT + "    ";
     private Map<String, Integer> invalidExternalLinks;
+    private Map<String, Integer> systemAbsolutePaths;
+    private Map<String, Integer> mdAbsolutePaths;
     private Map<String, Integer> invalidPaths;
     private Map<String, Integer> invalidAnchorLinks;
 
     public Rule08() {
         super();
         invalidExternalLinks = new HashMap<>();
+        systemAbsolutePaths = new HashMap<>();
+        mdAbsolutePaths = new HashMap<>();
         invalidPaths = new HashMap<>();
         invalidAnchorLinks = new HashMap<>();
     }
@@ -64,36 +69,40 @@ public class Rule08 extends LinkRule{
                 }
             }
             else if(isAbsolutePath(urlText)){
-                try{
-                    Path path = Paths.get(urlText);
-                    if (!Files.exists(path)){
-                        invalidPaths.put(urlText, lineNumber);
-                    }
-                }
-                catch (Exception e){
-                    invalidPaths.put(urlText, lineNumber);
-                }
+                systemAbsolutePaths.put(urlText, lineNumber);     
             }
             else {
-                try{
-                    Path madrPath = Paths.get(traverser.getMadrPath());
-                    Path containingDir = madrPath.getParent();
-                    Path resolvedPath = containingDir.resolve(urlText).normalize();
-                    if (!Files.exists(resolvedPath)){
+                if (urlText.startsWith("/")){
+                    mdAbsolutePaths.put(urlText, lineNumber);
+                }
+                else{
+                    try{
+                        Path madrPath = Paths.get(traverser.getMadrPath());
+                        Path containingDir = madrPath.getParent();
+                        Path resolvedPath = containingDir.resolve(urlText).normalize();
+                        if (!Files.exists(resolvedPath)){
+                            invalidPaths.put(urlText, lineNumber);
+                        }
+                    }
+                    catch (Exception e){
                         invalidPaths.put(urlText, lineNumber);
                     }
-                }
-                catch (Exception e){
-                    invalidPaths.put(urlText, lineNumber);
                 }
             }
         }
         StringBuilder description = new StringBuilder("The following links are broken:\n");
         buildDescription("External links:\n", invalidExternalLinks, description);
         buildDescription("Anchor links:\n", invalidAnchorLinks, description);
-        buildDescription("Paths:\n", invalidPaths, description);
+        buildDescription("System absolute paths, which are unrenderable by most Markdown renderers:\n", systemAbsolutePaths, description);
+        buildDescription("Relative Markdown paths:\n", invalidPaths, description);
         if (!description.toString().equals("The following links are broken:\n")){
-            reporter.report(new Violation(RULE_ID, description.toString(), -1));
+            reporter.report(new Violation(RULE_ID_A, description.toString(), -1));
+        }
+        if (!mdAbsolutePaths.isEmpty()){
+            description.setLength(0);
+            description.append("Use of absolute path links in Markdown is discouraged:\n");
+            mdAbsolutePaths.forEach((link, line) -> description.append(LISTING_INDENT + "Line " + line + ": " + link + "\n"));
+            reporter.report(new Violation(RULE_ID_B, description.toString(), -1));
         }
     }
 
