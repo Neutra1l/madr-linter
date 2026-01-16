@@ -30,10 +30,7 @@ public class Rule13 extends SectionRule{
                 if (!item.getOpeningMarker().toString().equals("*")){
                     violated = true;
                     desc.append(DESCRIPTION_INDENT);
-                    desc.append("Line " + (item.getStartLineNumber() + 1) + ": " + item.getChars().toString());
-                    if (i < bulletListInfoList.size() - 1 && j < items.size() - 1){
-                        desc.append("\n");
-                    }
+                    desc.append("Line " + (item.getStartLineNumber() + 1) + ": " + item.getChars().toString() + "\n");
                 }
             }
         }

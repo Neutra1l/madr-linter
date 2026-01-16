@@ -39,7 +39,7 @@ public class Rule10 extends HeadingRule {
         description = reportBadHeadingLevel(confirmation, description, this.indentNeeded, OptionalSection.CONFIRMATION.getPermittedHeadingLevel());
 
         if (description.toString().length() > 0){
-            reporter.report(new Violation(RULE_ID, description.toString(), -1));
+            reporter.report(new Violation(RULE_ID, description.append("\n").toString(), -1));
         }
     }
 

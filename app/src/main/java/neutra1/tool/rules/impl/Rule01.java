@@ -30,13 +30,13 @@ public class Rule01 extends HeadingRule {
             if (!sectionPresent) {
                 String description;
                 if (mandatorySection.name().equals("CONSIDERED_OPTIONS")) {
-                    description = "Missing or ill formatted mandatory section: Considered Options/Considered Alternatives";
+                    description = "Missing or ill formatted mandatory section: Considered Options/Considered Alternatives.\n";
                     reporter.report(new Violation(RULE_ID_C, description, -1));
                 } else if (mandatorySection.name().equals("CONTEXT")) {
-                    description = "Missing or ill formatted mandatory section: Context and Problem Statement";
+                    description = "Missing or ill formatted mandatory section: Context and Problem Statement.\n";
                     reporter.report(new Violation(RULE_ID_B, description, -1));
                 } else {
-                    description = "Missing or ill formatted mandatory section: Decision Outcome";
+                    description = "Missing or ill formatted mandatory section: Decision Outcome.\n";
                     reporter.report(new Violation(RULE_ID_D, description, -1));
                 }
             }

@@ -25,7 +25,7 @@ public class Rule02 extends SectionRule {
         }
     } 
     private void reportEmptySection(HeadingInfo headingInfo){
-        String description = "Section '" + headingInfo.text() + "' is empty.";
+        String description = "Section '" + headingInfo.text() + "' is empty.\n";
         int lineNumber = headingInfo.startLineNumber();
         reporter.report(new Violation(RULE_ID, description, lineNumber + 1));
     }

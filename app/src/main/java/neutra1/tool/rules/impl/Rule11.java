@@ -36,10 +36,10 @@ public class Rule11 extends HeadingRule{
         if (!parentText.contains(rawTextChildHeading)){
             String description;
             if (ruleId.equals(this.RULE_ID_A)){
-                description = "Per conventions, Consequences should be subsection of Decision Outcome";
+                description = "Per conventions, Consequences should be subsection of Decision Outcome.\n";
             }
             else {
-                description = "Per conventions, Confirmation should be subsection of Decision Outcome";
+                description = "Per conventions, Confirmation should be subsection of Decision Outcome.\n";
             }
             reporter.report(new Violation(ruleId, description, childHeading.startLineNumber()));
         }  

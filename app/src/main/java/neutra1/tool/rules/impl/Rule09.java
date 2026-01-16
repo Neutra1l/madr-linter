@@ -45,12 +45,7 @@ public class Rule09 extends NamingRule{
                 List<Integer> currentIndices = duplicateMap.get(currentKey);
                 description.append(DESCRIPTION_INDENT).append("For ID number " + currentKey + "\n");
                 for (int j = 0; j < currentIndices.size(); j++){
-                    if (j == currentIndices.size() - 1 && i == keys.size() - 1){
-                        description.append(FILE_LISTING_INDENT).append(validMadrNames.get(currentIndices.get(j)));
-                    }
-                    else {
-                        description.append(FILE_LISTING_INDENT).append(validMadrNames.get(currentIndices.get(j)) + "\n");
-                    }
+                    description.append(FILE_LISTING_INDENT).append(validMadrNames.get(currentIndices.get(j)) + "\n"); 
                 }
             }
             reporter.report(new Violation(RULE_ID, description.toString(), -1));

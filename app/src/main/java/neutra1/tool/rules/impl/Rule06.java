@@ -38,12 +38,7 @@ public class Rule06 extends NamingRule {
             return;
         }
         StringBuilder description = new StringBuilder(openingMessage);
-        for (int i = 0; i < files.size(); i++) {
-            description.append(FILE_LISTING_INDENT).append(files.get(i));
-            if (i < files.size() - 1) {
-                description.append("\n");
-            }
-        }
+        files.stream().forEach(file -> description.append(FILE_LISTING_INDENT).append(file).append("\n"));
         reporter.report(new Violation(ruleId, description.toString(), -1));
     }
 }

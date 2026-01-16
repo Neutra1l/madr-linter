@@ -39,10 +39,7 @@ public class Rule07 extends HeadingRule{
         while (iterator.hasNext()){
             Map.Entry<String, Integer> currentPair = iterator.next();
             description.append(DESCRIPTION_INDENT);
-            description.append("Line " + currentPair.getValue() + ": " + currentPair.getKey());
-            if (iterator.hasNext()){
-                description.append("\n");
-            }
+            description.append("Line " + currentPair.getValue() + ": " + currentPair.getKey() + "\n");
         }
         reporter.report(new Violation(RULE_ID, description.toString(), -1));
     }
