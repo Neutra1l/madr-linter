@@ -2,12 +2,6 @@ package neutra1.tool.rules.impl;
 
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +15,6 @@ public class Rule08 extends LinkRule{
 
     private final String RULE_ID_A = "MADR08a"; 
     private final String RULE_ID_B = "MADR08b";
-    private final String DESCRIPTION_INDENT = "          ";
-    private final String LISTING_INDENT = DESCRIPTION_INDENT + "    ";
     private Map<String, Integer> invalidExternalLinks;
     private Map<String, Integer> systemAbsolutePaths;
     private Map<String, Integer> mdAbsolutePaths;
@@ -46,12 +38,7 @@ public class Rule08 extends LinkRule{
             int lineNumber = link.startLineNumber();
             if (isExternalLink(urlText)){
                 try{
-                    URL url = URI.create(urlText).toURL();
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("HEAD");
-                    conn.setConnectTimeout(5000);
-                    conn.setReadTimeout(5000);
-                    int status = conn.getResponseCode();
+                    int status = establishHeadConnection(urlText);
                     if (status < 200 || status > 400){
                         invalidExternalLinks.put(urlText, lineNumber);
                     }
@@ -77,10 +64,8 @@ public class Rule08 extends LinkRule{
                 }
                 else{
                     try{
-                        Path madrPath = Paths.get(traverser.getMadrPath());
-                        Path containingDir = madrPath.getParent();
-                        Path resolvedPath = containingDir.resolve(urlText).normalize();
-                        if (!Files.exists(resolvedPath)){
+                        boolean exists = pathExists(urlText);
+                        if (!exists){
                             invalidPaths.put(urlText, lineNumber);
                         }
                     }
@@ -105,49 +90,4 @@ public class Rule08 extends LinkRule{
             reporter.report(new Violation(RULE_ID_B, description.toString(), -1));
         }
     }
-
-    private void buildDescription(String linkType, Map<String, Integer> brokenLinks, StringBuilder description){
-        if (brokenLinks.isEmpty()){
-            return;
-        }
-        description.append(DESCRIPTION_INDENT + linkType);
-        brokenLinks.forEach((link, line) -> description.append(LISTING_INDENT + "Line " + line + ": " + link + "\n"));
-    }
-
-    private boolean isExternalLink(String url){
-        try {
-        URI uri = new URI(url);
-        return uri.getScheme() != null &&
-               (uri.getScheme().equalsIgnoreCase("http") ||
-                uri.getScheme().equalsIgnoreCase("https"));
-        } 
-        catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean isAnchorLink(String url) {
-        try {
-            URI uri = new URI(url);
-            if (uri.getFragment() != null && uri.getScheme() == null){
-                 return true;
-            } 
-            else {
-                return false;
-            }
-        }
-        catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean isAbsolutePath(String path){
-        try {
-            return Paths.get(path).isAbsolute();
-        } 
-        catch (Exception e) {
-            return false;
-        }
-    }
-
 }

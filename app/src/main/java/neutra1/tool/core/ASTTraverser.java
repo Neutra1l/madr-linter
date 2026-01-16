@@ -6,6 +6,7 @@ import java.util.List;
 import neutra1.tool.models.records.AutoLinkInfo;
 import neutra1.tool.models.records.BulletListInfo;
 import neutra1.tool.models.records.HeadingInfo;
+import neutra1.tool.models.records.ImageInfo;
 import neutra1.tool.models.records.InlineLinkInfo;
 import neutra1.tool.models.records.MetadataInfo;
 import neutra1.tool.models.records.ParagraphInfo;
@@ -16,6 +17,7 @@ import com.github.sbaudoin.yamllint.YamlLintConfig;
 import com.vladsch.flexmark.ast.AutoLink;
 import com.vladsch.flexmark.ast.BulletList;
 import com.vladsch.flexmark.ast.Heading;
+import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.Link;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.parser.Parser;
@@ -40,6 +42,7 @@ public class ASTTraverser {
     private List<AutoLinkInfo> autoLinkInfoList;
     private List<MetadataInfo> metadataInfoList;
     private List<ParagraphInfo> paragraphInfoList;
+    private List<ImageInfo> imageInfoList;
     private NodeVisitor visitor;
     private static ASTTraverser astTraverser = null;
     private Node document;
@@ -53,6 +56,7 @@ public class ASTTraverser {
         this.autoLinkInfoList = new ArrayList<>();
         this.metadataInfoList = new ArrayList<>();
         this.paragraphInfoList = new ArrayList<>();
+        this.imageInfoList = new ArrayList<>();
         this.visitor = new NodeVisitor(
             new VisitHandler<>(Heading.class, this::visitHeading),
             new VisitHandler<>(Paragraph.class, this::visitParagraph),
@@ -60,7 +64,8 @@ public class ASTTraverser {
             new VisitHandler<>(AutoLink.class, this::visitAutoLink),
             new VisitHandler<>(Reference.class, this::visitReference),
             new VisitHandler<>(YamlFrontMatterBlock.class, this::visitMetadata),
-            new VisitHandler<>(BulletList.class, this::visitBulletList)
+            new VisitHandler<>(BulletList.class, this::visitBulletList),
+            new VisitHandler<>(Image.class, this::visitImage)
         );
     }
 
@@ -194,6 +199,16 @@ public class ASTTraverser {
         catch (Exception e){
             System.out.println("WARNING: parsing YAML front matter unsuccessful. Checks for rule 12 will not be run.\n");
         }
+    }
+
+    private void visitImage(Image image){
+        output.add("Image: " + image.getChars().toString());
+        String text = image.getText().toString();
+        String url = image.getUrl().toString();
+        int startLineNumber = image.getStartLineNumber();
+
+        imageInfoList.add(new ImageInfo(text, url, startLineNumber));
+        visitor.visitChildren(image);
     }
 
     private List<Node> buildSection(Heading heading){

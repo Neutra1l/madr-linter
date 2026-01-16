@@ -21,6 +21,7 @@ import neutra1.tool.rules.impl.Rule10;
 import neutra1.tool.rules.impl.Rule11;
 import neutra1.tool.rules.impl.Rule12;
 import neutra1.tool.rules.impl.Rule13;
+import neutra1.tool.rules.impl.Rule14;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -55,7 +56,8 @@ public class Main implements Runnable {
             new Rule10(),
             new Rule11(),
             new Rule12(),
-            new Rule13()
+            new Rule13(),
+            new Rule14()
         );
         for (AbstractRule rule : rules) {
             rule.check();
