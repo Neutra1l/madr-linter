@@ -17,7 +17,7 @@ public class Rule04 extends SectionRule {
     @Override
     public void check() {
         HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles());
-        if (decisionOutcome.body().isEmpty() || decisionOutcome == null) {
+        if (decisionOutcome == null || decisionOutcome.body().isEmpty()) {
             return;
         }
         Node chosenOption = findNodeByKeywords(decisionOutcome.body(), 

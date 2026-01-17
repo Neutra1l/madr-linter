@@ -20,6 +20,9 @@ public class Rule03 extends SectionRule {
     @Override
     public void check() {
         HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles());
+        if (decisionOutcome == null){
+            return;
+        }
         Node nodeDecisionOutcome = findNodeByKeywords(decisionOutcome.body(), DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
         if (nodeDecisionOutcome == null) {
             String description = "Chosen option is missing in the Decision Outcome section (Keyword: Chosen Option or Chosen Alternative).\n";
