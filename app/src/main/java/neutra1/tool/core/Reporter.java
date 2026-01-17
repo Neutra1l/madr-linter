@@ -32,12 +32,15 @@ public class Reporter {
         violationList.add(violation);
     }
 
-    public void outputDiagnostics() {
+    public void outputDiagnostics(int disabledRuleCount, int totalRuleCount, boolean quietMode) {
         StringBuilder diagnosis = getDiagnosis();
         System.out.println(diagnosis.toString());
+        if (!quietMode){
+            printInformation(totalRuleCount, disabledRuleCount);
+        }
     }
 
-    public void outputDiagnostics(String outputFile, boolean override){
+    public void outputDiagnostics(String outputFile, int disabledRuleCount, int totalRuleCount, boolean override, boolean quietMode){
         StringBuilder diagnosis = getDiagnosis();
         Path currentDir = Paths.get(System.getProperty("user.dir"));
         Path outputPath = Paths.get(outputFile);
@@ -56,7 +59,10 @@ public class Reporter {
             System.out.println("WARNING: writing to " + outputPath.toString() + " not successful." + "\n" +
                                 "Output defaults to stdout. You can add flag \"--override\" to overwrite it.\n" + 
                                 "If this message still shows up after adding that flag, check path validity and/or write access.\n");
-            outputDiagnostics();
+            outputDiagnostics(disabledRuleCount, totalRuleCount, quietMode);
+        }
+        if (!quietMode){
+            printInformation(totalRuleCount, disabledRuleCount);
         }
     }
 
@@ -72,5 +78,15 @@ public class Reporter {
             }
         }
         return diagnosis;
+    }
+
+    private void printInformation(int totalRuleCount, int disabledRuleCount){
+        StringBuilder info = new StringBuilder();
+        int violationCount = violationList.size();
+        int checkedRuleCount = totalRuleCount - disabledRuleCount;
+        info.append("madrlint - Open-sourced under MIT License.\n");
+        info.append("See https://github.com/Neutra1l/madr-linter for documentation and how to contribute.\n");
+        info.append(violationCount + " violations detected from checks for " + checkedRuleCount + " rules " + "(" + disabledRuleCount + " user-suppressed rules).");
+        System.out.println(info.toString());
     }
 }

@@ -5,7 +5,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jspecify.annotations.NonNull;
 
@@ -41,12 +43,17 @@ public class Main implements Runnable {
     private final String RESET = "\u001B[0m";
     private final String RED   = "\u001B[31m";
     private final Path currentDir = Paths.get(System.getProperty("user.dir"));
-    @Parameters(index = "0", description = "File path to lint")
+    @Parameters(index = "0", description = "Path to MADR document.")
     private String madrFile;
     @Option(names = {"--out", "-o"}, description = "Output the diagnostics to a file. If that file does not exist, it will be created.")
     private String outputFile;
     @Option(names = {"--override"}, description = "If the given output file already exists, it will be overwritten.")
     private boolean override;
+    @Option(names = {"-q", "--quiet"}, description = "Information not relevant to the lint results will be suppressed.")
+    boolean quietMode;
+    @Option(names = {"-n", "--no-warn"}, description = "Disable warnings for certain rules", split = ",")
+    private Set<Integer> disabledRules = new HashSet<>();
+
     @Override
     public void run() {
         madrFile = currentDir.resolve(madrFile).toString();
@@ -59,6 +66,7 @@ public class Main implements Runnable {
             System.out.println(RED + "Error: unable to read input file " + madrFile);
             System.exit(2);
         }
+        System.out.println("Linting on " + madrFile + "...");
         // astTraverser.getOutput().toString().lines().forEach(System.out::println);
         List<@NonNull AbstractRule> rules = List.of(
             new Rule01(),
@@ -75,15 +83,16 @@ public class Main implements Runnable {
             new Rule13(),
             new Rule14()
         );
-        for (AbstractRule rule : rules) {
-            rule.check();
-        }
+        rules.stream().filter(rule -> !disabledRules.contains(rule.getRuleNumber())).forEach(rule -> rule.check());
+        int disabledRuleCount = disabledRules.size();
+        int totalRuleCount = rules.size();
         if (outputFile == null){  
-            reporter.outputDiagnostics();
+            reporter.outputDiagnostics(disabledRuleCount, totalRuleCount, quietMode);
         } 
         else {
-            reporter.outputDiagnostics(outputFile, override);
+            reporter.outputDiagnostics(outputFile, disabledRuleCount, totalRuleCount, override, quietMode);
         }
+        System.out.println("Done.");
     }
 
     public static void main(String[] args) {
