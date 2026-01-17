@@ -26,6 +26,7 @@ import neutra1.tool.rules.impl.Rule13;
 import neutra1.tool.rules.impl.Rule14;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Command(
@@ -38,21 +39,25 @@ public class Main implements Runnable {
 
     private final String RESET = "\u001B[0m";
     private final String RED   = "\u001B[31m";
-
+    private final Path currentDir = Paths.get(System.getProperty("user.dir"));
     @Parameters(index = "0", description = "File path to lint")
-    private String filePath;
+    private String madrFile;
+    @Option(names = {"--out", "-o"}, description = "Output the diagnostics to a file. If that file does not exist, it will be created.")
+    private String outputFile;
+    @Option(names = {"--override"}, description = "If the given output file already exists, it will be overwritten.")
+    private boolean override;
     @Override
     public void run() {
-        ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(filePath);
+        ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(madrFile);
         Reporter reporter = Reporter.getReporterInstance();
+
         try {
-            astTraverser.traverse(readFile(filePath));
+            astTraverser.traverse(readFile(madrFile));
         }
         catch (IOException ioException){
-            System.out.println(RED + "Error: unable to read input file " + filePath);
+            System.out.println(RED + "Error: unable to read input file " + madrFile);
             System.exit(2);
         }
-
         // astTraverser.getOutput().toString().lines().forEach(System.out::println);
         List<@NonNull AbstractRule> rules = List.of(
             new Rule01(),
@@ -72,7 +77,12 @@ public class Main implements Runnable {
         for (AbstractRule rule : rules) {
             rule.check();
         }
-        reporter.outputDiagnostics();
+        if (outputFile == null){  
+            reporter.outputDiagnostics();
+        } 
+        else {
+            reporter.outputDiagnostics(outputFile, override);
+        }
     }
 
     public static void main(String[] args) {
@@ -81,10 +91,9 @@ public class Main implements Runnable {
     }
 
     private String readFile(String filePath) throws IOException{
-        Path cwd = Paths.get(System.getProperty("user.dir"));
         Path path = Paths.get(filePath);
         if (!path.isAbsolute()){
-            path = cwd.resolve(path);
+            path = currentDir.resolve(filePath);
         }
         String content = new String(Files.readAllBytes(path));
         return content;
