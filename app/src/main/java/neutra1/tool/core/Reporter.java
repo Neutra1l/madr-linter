@@ -62,7 +62,7 @@ public class Reporter {
 
     private StringBuilder getDiagnosis() {
         StringBuilder diagnosis = new StringBuilder();
-        violationList.sort(Comparator.comparingInt(Violation::lineNumber));
+        violationList.sort(Comparator.comparingInt(Violation::getRuleNumber));
         for (Violation v : violationList) {
             if (v.lineNumber() == -1) {
                 diagnosis.append("[" + v.ruleId() + "] " + v.description() + "\n");
