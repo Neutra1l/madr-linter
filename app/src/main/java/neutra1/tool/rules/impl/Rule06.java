@@ -18,8 +18,8 @@ public class Rule06 extends NamingRule {
 
     @Override
     public void check() {
-        reportNonMarkdownFiles();
         reportMadrsWithNamingViolations();
+        reportNonMarkdownFiles();
     }
 
     private void reportNonMarkdownFiles(){

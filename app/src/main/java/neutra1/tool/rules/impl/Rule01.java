@@ -49,7 +49,7 @@ public class Rule01 extends HeadingRule {
             }
         }
         if (!decisionPresent) {
-            String description = "Missing or ill formatted mandatory section: Decision";
+            String description = "Missing or ill formatted mandatory section: Decision.\n";
             reporter.report(new Violation(RULE_ID_A, description, -1));
         }
     }

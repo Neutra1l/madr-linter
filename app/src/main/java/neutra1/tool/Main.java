@@ -48,9 +48,9 @@ public class Main implements Runnable {
     private boolean override;
     @Override
     public void run() {
+        madrFile = currentDir.resolve(madrFile).toString();
         ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(madrFile);
         Reporter reporter = Reporter.getReporterInstance();
-
         try {
             astTraverser.traverse(readFile(madrFile));
         }

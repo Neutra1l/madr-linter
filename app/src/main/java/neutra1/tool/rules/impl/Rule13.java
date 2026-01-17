@@ -1,5 +1,6 @@
 package neutra1.tool.rules.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vladsch.flexmark.ast.BulletListItem;
@@ -20,7 +21,7 @@ public class Rule13 extends SectionRule{
     @Override
     public void check(){
         List<BulletListInfo> bulletListInfoList = traverser.getBulletListInfoList();
-        boolean violated = false;
+        List<String> violatingItems = new ArrayList<>();
         StringBuilder desc = new StringBuilder("Bullet lists should use asterisks (*) as opening marker. The following list items do not conform to that rule:\n");
         for (int i = 0; i < bulletListInfoList.size(); i++){
             BulletListInfo bulletListInfo = bulletListInfoList.get(i);
@@ -28,13 +29,12 @@ public class Rule13 extends SectionRule{
             for (int j = 0; j < items.size(); j++){
                 BulletListItem item = items.get(j);
                 if (!item.getOpeningMarker().toString().equals("*")){
-                    violated = true;
-                    desc.append(DESCRIPTION_INDENT);
-                    desc.append("Line " + (item.getStartLineNumber() + 1) + ": " + item.getChars().toString() + "\n");
+                    violatingItems.add(DESCRIPTION_INDENT + "Line " + (item.getStartLineNumber() + 1) + ": " + item.getChars().toString().trim() + "\n");
                 }
             }
         }
-        if (violated){
+        if (!violatingItems.isEmpty()){
+            violatingItems.forEach(item -> desc.append(item));
             reporter.report(new Violation(RULE_ID, desc.toString(), -1));
         }
     }

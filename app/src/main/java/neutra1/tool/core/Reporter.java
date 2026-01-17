@@ -54,7 +54,8 @@ public class Reporter {
         }
         catch (IOException e){
             System.out.println("WARNING: writing to " + outputPath.toString() + " not successful." + "\n" +
-                                "Output defaults to stdout. Please check path validity and/or write access.\n");
+                                "Output defaults to stdout. You can add flag \"--override\" to overwrite it.\n" + 
+                                "If this message still shows up after adding that flag, check path validity and/or write access.\n");
             outputDiagnostics();
         }
     }
