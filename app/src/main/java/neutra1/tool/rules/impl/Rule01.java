@@ -17,6 +17,11 @@ public class Rule01 extends HeadingRule {
     public Rule01() {super();}
 
     @Override
+    public int getRuleNumber(){
+        return 1;
+    }
+
+    @Override
     public void check(){
         List<HeadingInfo> headingInfoList = traverser.getHeadingInfoList();
         for (MandatorySection mandatorySection : MandatorySection.values()) {

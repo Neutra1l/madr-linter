@@ -18,6 +18,11 @@ public class Rule10 extends HeadingRule {
     }
 
     @Override
+    public int getRuleNumber(){
+        return 10;
+    }
+
+    @Override
     public void check(){
         HeadingInfo context = getHeadingInfoByText(MandatorySection.CONTEXT.getPermittedTitles(), false);
         HeadingInfo consideredOptions = getHeadingInfoByText(MandatorySection.CONSIDERED_OPTIONS.getPermittedTitles(), false);

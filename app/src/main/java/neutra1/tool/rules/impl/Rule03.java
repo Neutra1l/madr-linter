@@ -18,6 +18,11 @@ public class Rule03 extends SectionRule {
     public Rule03(){super();}
 
     @Override
+    public int getRuleNumber(){
+        return 3;
+    }
+
+    @Override
     public void check() {
         HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles());
         if (decisionOutcome == null){

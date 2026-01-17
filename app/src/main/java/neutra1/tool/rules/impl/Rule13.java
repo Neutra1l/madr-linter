@@ -19,6 +19,11 @@ public class Rule13 extends SectionRule{
     }
 
     @Override
+    public int getRuleNumber(){
+        return 13;
+    }
+
+    @Override
     public void check(){
         List<BulletListInfo> bulletListInfoList = traverser.getBulletListInfoList();
         List<String> violatingItems = new ArrayList<>();

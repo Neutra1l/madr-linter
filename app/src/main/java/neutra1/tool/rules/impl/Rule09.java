@@ -21,6 +21,11 @@ public class Rule09 extends NamingRule{
     public Rule09(){super();}
 
     @Override
+    public int getRuleNumber(){
+        return 9;
+    }
+
+    @Override
     public void check(){
         Map<String, List<Integer>> madrIdToIndicesMap = new HashMap<>();
         Map<String, List<Integer>> duplicateMap = new HashMap<>();

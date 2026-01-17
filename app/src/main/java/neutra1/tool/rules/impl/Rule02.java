@@ -11,6 +11,11 @@ public class Rule02 extends SectionRule {
     public Rule02(){super();}
     
     @Override
+    public int getRuleNumber(){
+        return 2;
+    }
+
+    @Override
     public void check() {
         for (HeadingInfo headingInfo : traverser.getHeadingInfoList()) {
             if (headingInfo.body().isEmpty() && headingInfo.level() > 1 && headingInfo.getSubsequenceTillNextSameLevelHeading().isBlank()) {

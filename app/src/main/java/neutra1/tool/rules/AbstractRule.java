@@ -12,4 +12,6 @@ public abstract class AbstractRule {
 
     public abstract void check();
 
+    public abstract int getRuleNumber();
+
 }

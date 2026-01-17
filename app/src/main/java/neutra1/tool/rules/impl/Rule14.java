@@ -18,6 +18,11 @@ public class Rule14 extends LinkRule{
     }
 
     @Override
+    public int getRuleNumber(){
+        return 14;
+    }
+
+    @Override
     public void check(){
         Map<String, Integer> faultyImages = new HashMap<>();
         Map<String, Integer> absoluteMarkdownPaths = new HashMap<>();

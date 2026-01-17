@@ -15,6 +15,11 @@ public class Rule04 extends SectionRule {
     public Rule04(){super();}
 
     @Override
+    public int getRuleNumber(){
+        return 4;
+    }
+
+    @Override
     public void check() {
         HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles());
         if (decisionOutcome == null || decisionOutcome.body().isEmpty()) {

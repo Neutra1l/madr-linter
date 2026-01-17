@@ -19,6 +19,11 @@ public class Rule12 extends MetadataRule{
     }
 
     @Override
+    public int getRuleNumber(){
+        return 12;
+    }
+
+    @Override
     public void check(){
         List<MetadataInfo> metadataInfoList = traverser.getMetadataInfoList();
         if (metadataInfoList.size() == 0){

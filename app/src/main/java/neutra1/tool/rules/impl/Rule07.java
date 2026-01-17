@@ -21,6 +21,11 @@ public class Rule07 extends HeadingRule{
     }
 
     @Override
+    public int getRuleNumber(){
+        return 7;
+    }
+
+    @Override
     public void check(){
         List<HeadingInfo> headingList = traverser.getHeadingInfoList();
         Map<String, Integer> violatingHeadings = new LinkedHashMap<>();

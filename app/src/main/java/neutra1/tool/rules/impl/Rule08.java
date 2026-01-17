@@ -31,6 +31,11 @@ public class Rule08 extends LinkRule{
     }
 
     @Override
+    public int getRuleNumber(){
+        return 8;
+    }
+
+    @Override
     public void check(){
         List<LinkInfo> inlineLinkInfoList = traverser.getLinkInfoList();
         for (LinkInfo link : inlineLinkInfoList){

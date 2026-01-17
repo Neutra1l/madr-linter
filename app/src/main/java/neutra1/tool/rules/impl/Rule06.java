@@ -17,6 +17,11 @@ public class Rule06 extends NamingRule {
     }
 
     @Override
+    public int getRuleNumber(){
+        return 6;
+    }
+
+    @Override
     public void check() {
         reportMadrsWithNamingViolations();
         reportNonMarkdownFiles();

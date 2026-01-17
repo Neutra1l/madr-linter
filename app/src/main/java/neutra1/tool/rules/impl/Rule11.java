@@ -16,6 +16,11 @@ public class Rule11 extends HeadingRule{
     }
 
     @Override
+    public int getRuleNumber(){
+        return 11;
+    }
+
+    @Override
     public void check(){
         HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles(), false);
         if (decisionOutcome == null){
