@@ -1,6 +1,7 @@
 package neutra1.tool;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -95,7 +96,7 @@ public class Main implements Runnable {
         if (!path.isAbsolute()){
             path = currentDir.resolve(filePath);
         }
-        String content = new String(Files.readAllBytes(path));
+        String content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
         return content;
     }
     
