@@ -96,6 +96,9 @@ public class Main implements Runnable {
     }
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            args = new String[] { "-h" };
+        }
         int exitCode = new CommandLine(new Main()).execute(args);
         System.exit(exitCode);
     }

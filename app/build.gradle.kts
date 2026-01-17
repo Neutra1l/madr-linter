@@ -7,7 +7,8 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    application
+   application
+   id("com.gradleup.shadow") version "9.3.1"
 }
 
 repositories {
@@ -23,6 +24,7 @@ dependencies {
     implementation(libs.guava)
     // Picocli for CLI dev
     implementation("info.picocli:picocli:4.7.7")
+    annotationProcessor("info.picocli:picocli-codegen:4.7.5")
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
@@ -45,7 +47,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "neutra1.tool.Main"
+    mainClass.set("neutra1.tool.Main")
 }
 
 tasks.named<JavaExec>("run") {
@@ -56,3 +58,13 @@ tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+tasks.shadowJar {
+    manifest {
+        attributes(
+            "Main-Class" to application.mainClass.get()
+        )
+    }
+}
+
+
