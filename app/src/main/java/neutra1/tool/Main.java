@@ -43,15 +43,16 @@ public class Main implements Runnable {
     private final String RESET = "\u001B[0m";
     private final String RED   = "\u001B[31m";
     private final Path currentDir = Paths.get(System.getProperty("user.dir"));
+
     @Parameters(index = "0", description = "Path to MADR document.")
     private String madrFile;
     @Option(names = {"--out", "-o"}, description = "Output the diagnostics to a file. If that file does not exist, it will be created.")
     private String outputFile;
-    @Option(names = {"--override"}, description = "If the given output file already exists, it will be overwritten.")
+    @Option(names = {"-O", "--override"}, description = "If the given output file already exists, it will be overwritten.")
     private boolean override;
     @Option(names = {"-q", "--quiet"}, description = "Information not relevant to the lint results will be suppressed.")
     boolean quietMode;
-    @Option(names = {"-n", "--no-warn"}, description = "Disable warnings for certain rules", split = ",")
+    @Option(names = {"-n", "--no-warn"}, description = "Disable warnings for certain rules. They can either be declared separately(e.g -n1 -n2) or chained together separated by comma(e.g -n1,2)", split = ",")
     private Set<Integer> disabledRules = new HashSet<>();
 
     @Override
@@ -63,7 +64,7 @@ public class Main implements Runnable {
             astTraverser.traverse(readFile(madrFile));
         }
         catch (IOException ioException){
-            System.out.println(RED + "Error: unable to read input file " + madrFile);
+            System.out.println(RED + "Error: unable to read input file " + madrFile + RESET);
             System.exit(2);
         }
         System.out.println("Linting on " + madrFile + "...");
@@ -97,7 +98,7 @@ public class Main implements Runnable {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            args = new String[] { "-h" };
+            args = new String[] {"-h"};
         }
         int exitCode = new CommandLine(new Main()).execute(args);
         System.exit(exitCode);

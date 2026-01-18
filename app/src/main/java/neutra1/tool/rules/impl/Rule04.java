@@ -26,7 +26,7 @@ public class Rule04 extends SectionRule {
             return;
         }
         Node chosenOption = findNodeByKeywords(decisionOutcome.body(), 
-            DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
+        DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
         if (chosenOption == null) {
             return;
         }

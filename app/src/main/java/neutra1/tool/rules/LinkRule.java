@@ -15,8 +15,6 @@ import java.util.Map;
 public abstract class LinkRule extends AbstractRule{
 
     protected final String ruleType = "Link Rule";
-    protected final String DESCRIPTION_INDENT = "          ";
-    protected final String LISTING_INDENT = DESCRIPTION_INDENT + "    ";
 
     public LinkRule(){
         super();
@@ -80,9 +78,9 @@ public abstract class LinkRule extends AbstractRule{
             return;
         }
         if (!linkType.equals("")){
-            description.append(DESCRIPTION_INDENT + linkType);
+            description.append(DESCRIPTION_INDENT_LONG + linkType);
         }
-        brokenLinks.forEach((link, line) -> description.append(LISTING_INDENT + "Line " + line + ": " + link + "\n"));
+        brokenLinks.forEach((link, line) -> description.append(LISTING_INDENT_LONG + "Line " + line + ": " + link + "\n"));
     }
     
 }

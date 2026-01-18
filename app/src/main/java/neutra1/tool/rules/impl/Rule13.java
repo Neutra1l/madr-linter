@@ -12,7 +12,6 @@ import neutra1.tool.rules.SectionRule;
 public class Rule13 extends SectionRule{
     
     private final String RULE_ID = "MADR13";
-    private final String DESCRIPTION_INDENT = "         ";
 
     public Rule13(){
         super();
@@ -34,7 +33,7 @@ public class Rule13 extends SectionRule{
             for (int j = 0; j < items.size(); j++){
                 BulletListItem item = items.get(j);
                 if (!item.getOpeningMarker().toString().equals("*")){
-                    violatingItems.add(DESCRIPTION_INDENT + "Line " + (item.getStartLineNumber() + 1) + ": " + item.getChars().toString().trim() + "\n");
+                    violatingItems.add(LISTING_INDENT_SHORT + "Line " + (item.getStartLineNumber() + 1) + ": " + item.getChars().toString().trim() + "\n");
                 }
             }
         }

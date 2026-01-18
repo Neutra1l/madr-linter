@@ -15,8 +15,6 @@ import neutra1.tool.rules.NamingRule;
 public class Rule09 extends NamingRule{
 
     private final String RULE_ID = "MADR09";
-    private final String DESCRIPTION_INDENT = "         ";
-    private final String FILE_LISTING_INDENT = "    " + DESCRIPTION_INDENT;
 
     public Rule09(){super();}
 
@@ -48,9 +46,9 @@ public class Rule09 extends NamingRule{
             for (int i = 0; i < keys.size(); i++){
                 String currentKey = keys.get(i);
                 List<Integer> currentIndices = duplicateMap.get(currentKey);
-                description.append(DESCRIPTION_INDENT).append("For ID number " + currentKey + "\n");
+                description.append(DESCRIPTION_INDENT_SHORT).append("For ID number " + currentKey + "\n");
                 for (int j = 0; j < currentIndices.size(); j++){
-                    description.append(FILE_LISTING_INDENT).append(validMadrNames.get(currentIndices.get(j)) + "\n"); 
+                    description.append(LISTING_INDENT_SHORT).append(validMadrNames.get(currentIndices.get(j)) + "\n"); 
                 }
             }
             reporter.report(new Violation(RULE_ID, description.toString(), -1));

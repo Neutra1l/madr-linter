@@ -9,7 +9,6 @@ import neutra1.tool.rules.HeadingRule;
 public class Rule10 extends HeadingRule {
 
     private final String RULE_ID = "MADR10";
-    private final String DESCRIPTION_INDENT = "         ";
     private boolean indentNeeded;
 
     public Rule10(){
@@ -56,7 +55,7 @@ public class Rule10 extends HeadingRule {
         if (actualLevel != permittedHeadingLevel){
             this.indentNeeded = true;
             if (indentNeeded){
-                stringBuilder.append("\n" + DESCRIPTION_INDENT);
+                stringBuilder.append("\n" + DESCRIPTION_INDENT_SHORT);
             }
             stringBuilder.append(headingInfo.text() + " should have heading level " + permittedHeadingLevel + " per convention. Actual heading level found: " + actualLevel);
         }

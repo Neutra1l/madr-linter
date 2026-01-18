@@ -91,7 +91,7 @@ public class Rule08 extends LinkRule{
         if (!mdAbsolutePaths.isEmpty()){
             description.setLength(0);
             description.append("Use of absolute path links in Markdown is discouraged:\n");
-            mdAbsolutePaths.forEach((link, line) -> description.append(LISTING_INDENT + "Line " + line + ": " + link + "\n"));
+            mdAbsolutePaths.forEach((link, line) -> description.append(LISTING_INDENT_LONG + "Line " + line + ": " + link + "\n"));
             reporter.report(new Violation(RULE_ID_B, description.toString(), -1));
         }
     }

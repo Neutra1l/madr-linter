@@ -9,8 +9,6 @@ public class Rule06 extends NamingRule {
 
     private final String RULE_ID_A = "MADR06a";
     private final String RULE_ID_B = "MADR06b";
-    private final String DESCRIPTION_INDENT = "          ";
-    private final String FILE_LISTING_INDENT = "    " + DESCRIPTION_INDENT;
    
     public Rule06(){
         super();
@@ -29,7 +27,7 @@ public class Rule06 extends NamingRule {
 
     private void reportNonMarkdownFiles(){
         StringBuilder openingMessage = new StringBuilder("Per conventions, MADR documents should be contained in a directory dedicated to them.\n");
-        openingMessage.append(DESCRIPTION_INDENT).append("The following non-markdown files and directories were found in the MADR directory: \n");
+        openingMessage.append(DESCRIPTION_INDENT_LONG).append("The following non-markdown files and directories were found in the MADR directory: \n");
         this.report(nonMarkdownFiles, RULE_ID_B, openingMessage.toString());
     }
 
@@ -43,7 +41,7 @@ public class Rule06 extends NamingRule {
             return;
         }
         StringBuilder description = new StringBuilder(openingMessage);
-        files.stream().forEach(file -> description.append(FILE_LISTING_INDENT).append(file).append("\n"));
+        files.stream().forEach(file -> description.append(LISTING_INDENT_LONG).append(file).append("\n"));
         reporter.report(new Violation(ruleId, description.toString(), -1));
     }
 }
