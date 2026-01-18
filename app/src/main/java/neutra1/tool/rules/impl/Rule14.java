@@ -2,7 +2,6 @@ package neutra1.tool.rules.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import neutra1.tool.models.records.ImageInfo;
 import neutra1.tool.models.records.Violation;
@@ -24,8 +23,8 @@ public class Rule14 extends LinkRule{
 
     @Override
     public void check(){
-        Map<String, Integer> faultyImages = new HashMap<>();
-        Map<String, Integer> absoluteMarkdownPaths = new HashMap<>();
+        HashMap<String, Integer> faultyImages = new HashMap<>();
+        HashMap<String, Integer> absoluteMarkdownPaths = new HashMap<>();
         List<ImageInfo> imgInfos = traverser.getImageInfoList();
         for (ImageInfo imgInfo : imgInfos){
             String url = imgInfo.url();

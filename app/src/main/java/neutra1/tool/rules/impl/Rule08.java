@@ -4,7 +4,6 @@ package neutra1.tool.rules.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.LinkInfo;
@@ -15,11 +14,11 @@ public class Rule08 extends LinkRule{
 
     private final String RULE_ID_A = "MADR08a"; 
     private final String RULE_ID_B = "MADR08b";
-    private Map<String, Integer> invalidExternalLinks;
-    private Map<String, Integer> systemAbsolutePaths;
-    private Map<String, Integer> mdAbsolutePaths;
-    private Map<String, Integer> invalidPaths;
-    private Map<String, Integer> invalidAnchorLinks;
+    private HashMap<String, Integer> invalidExternalLinks;
+    private HashMap<String, Integer> systemAbsolutePaths;
+    private HashMap<String, Integer> mdAbsolutePaths;
+    private HashMap<String, Integer> invalidPaths;
+    private HashMap<String, Integer> invalidAnchorLinks;
 
     public Rule08() {
         super();

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class LinkRule extends AbstractRule{
@@ -73,14 +74,15 @@ public abstract class LinkRule extends AbstractRule{
         return Files.exists(resolvedPath);    
     }
 
-    protected void buildDescription(String linkType, Map<String, Integer> brokenLinks, StringBuilder description){
+    protected void buildDescription(String linkType, HashMap<String, Integer> brokenLinks, StringBuilder description){
         if (brokenLinks.isEmpty()){
             return;
         }
         if (!linkType.equals("")){
             description.append(DESCRIPTION_INDENT_LONG + linkType);
         }
-        brokenLinks.forEach((link, line) -> description.append(LISTING_INDENT_LONG + "Line " + line + ": " + link + "\n"));
+        brokenLinks.entrySet().stream().sorted(Map.Entry.comparingByValue())
+        .forEach(entry -> description.append(LISTING_INDENT_LONG + "Line " + entry.getValue() + ": " + entry.getKey() + "\n"));
     }
     
 }

@@ -67,7 +67,7 @@ public class Main implements Runnable {
             System.out.println(RED + "Error: unable to read input file " + madrFile + RESET);
             System.exit(2);
         }
-        System.out.println("Linting on " + madrFile + "...");
+        System.out.println("INFO: Linting on " + madrFile + "...\n");
         // astTraverser.getOutput().toString().lines().forEach(System.out::println);
         List<@NonNull AbstractRule> rules = List.of(
             new Rule01(),
