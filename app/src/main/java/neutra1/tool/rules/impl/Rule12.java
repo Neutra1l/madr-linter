@@ -41,7 +41,7 @@ public class Rule12 extends MetadataRule{
             String[] parts = current.split(":", 3);
             int line = Integer.parseInt(parts[0]) + startLineNumber;
             String desc = capitalize(parts[2]);
-            descriptionBuilder.append(DESCRIPTION_INDENT_SHORT).append(LISTING_INDENT_SHORT + "Line " + line + ": " + desc + "\n");
+            descriptionBuilder.append(LISTING_INDENT_SHORT + "Line " + line + ": " + desc + "\n");
         }
         reporter.report(new Violation(RULE_ID, descriptionBuilder.toString(), -1));
     }
