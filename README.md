@@ -49,7 +49,9 @@ Learn more about MADR [here](https://www.ozimmer.ch/practices/2022/11/22/MADRTem
 ```
 ### Naming rules
 ```
-06. Adherence to naming conventions for MADR (The format is as follows: xxxx-decision.md).
+05*. The numberings of ADRs within the containing folder should be consecutive(i.e. no skips)
+     and start with either 0000 or 0001.
+06. Adherence to naming conventions for MADR (The format is as follows: xxxx-short-description-of-decision.md).
 09. No collisions of numberings between MADRs in the same folder.
 15*. If the current directory is tracked by Git and has a remote in GitHub, 
     requested changes within pull requests should not introduce new naming violations.
