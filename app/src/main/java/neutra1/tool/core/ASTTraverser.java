@@ -105,18 +105,17 @@ public class ASTTraverser {
         String rawText = heading.getChars().toString();
         String anchorRefId = heading.getAnchorRefId();
         int level = heading.getLevel();
+        List<Node> body = buildBody(heading, false);
+        List<Node> bodyWithSubsections = buildBody(heading, true);
         int startLineNumber = heading.getStartLineNumber() + 1;
-        String subsequenceTillEnd = heading.baseSubSequence(heading.getEndOfLine()).toString();
-        headingInfoList.add(new HeadingInfo(text, rawText, anchorRefId, level, startLineNumber, subsequenceTillEnd, buildSection(heading)));
+        headingInfoList.add(new HeadingInfo(text, rawText, anchorRefId, level, startLineNumber, body, bodyWithSubsections));
         visitor.visitChildren(heading);
-
     }
 
     private void visitParagraph(Paragraph paragraph) {
         output.add("Paragraph: " + paragraph.getChars());
         String text = paragraph.getChars().toString();
         int startLineNumber = paragraph.getStartLineNumber() + 1;
-
         paragraphInfoList.add(new ParagraphInfo(text, startLineNumber));
         visitor.visitChildren(paragraph);
     }
@@ -208,12 +207,20 @@ public class ASTTraverser {
         visitor.visitChildren(image);
     }
 
-    private List<Node> buildSection(Heading heading){
+    private List<Node> buildBody(Heading heading, boolean includeSubsections){
         List<Node> bodyNodes = new ArrayList<>();
         Node current = heading.getNext();
+        int headingLevel = heading.getLevel();
         while(current != null){
-            if (current instanceof Heading){
-                return bodyNodes;
+            if (current instanceof Heading nextHeading){
+                if (includeSubsections){
+                    if (nextHeading.getLevel() <= headingLevel){
+                        break;
+                    }
+                }
+                else {
+                    return bodyNodes;
+                }
             }
             bodyNodes.add(current);
             current = current.getNext();

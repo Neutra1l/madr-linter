@@ -18,17 +18,12 @@ public class Rule02 extends SectionRule {
     @Override
     public void check() {
         for (HeadingInfo headingInfo : traverser.getHeadingInfoList()) {
-            if (headingInfo.body().isEmpty() && headingInfo.level() > 1 && headingInfo.getSubsequenceTillNextSameLevelHeading().isBlank()) {
+            if (headingInfo.getBodyUnderHeading(true).isBlank()) {
                 reportEmptySection(headingInfo);
             }
-            else if (headingInfo.level() == 1){
-                String content = headingInfo.subsequenceTillEnd();
-                if (content.isBlank()){
-                    reportEmptySection(headingInfo);
-                }
-            }
-        }
-    } 
+        } 
+    }
+    
     private void reportEmptySection(HeadingInfo headingInfo){
         String description = "Section '" + headingInfo.text() + "' is empty.\n";
         int lineNumber = headingInfo.startLineNumber();
