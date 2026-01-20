@@ -51,6 +51,14 @@ application {
     mainClass.set("neutra1.tool.Main")
 }
 
+graalvmNative{
+    binaries {
+        named("main") {
+            buildArgs("--enable-http", "--enable-https")
+        }
+    }
+}
+
 tasks.named<JavaExec>("run") {
     workingDir = rootProject.projectDir
 }
