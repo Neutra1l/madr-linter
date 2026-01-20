@@ -3,7 +3,7 @@ package neutra1.tool.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import neutra1.tool.models.records.BulletListInfo;
+import neutra1.tool.models.records.BulletListItemInfo;
 import neutra1.tool.models.records.HeadingInfo;
 import neutra1.tool.models.records.ImageInfo;
 import neutra1.tool.models.records.LinkInfo;
@@ -14,7 +14,7 @@ import com.github.sbaudoin.yamllint.LintProblem;
 import com.github.sbaudoin.yamllint.Linter;
 import com.github.sbaudoin.yamllint.YamlLintConfig;
 import com.vladsch.flexmark.ast.AutoLink;
-import com.vladsch.flexmark.ast.BulletList;
+import com.vladsch.flexmark.ast.BulletListItem;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.Link;
@@ -36,7 +36,7 @@ public class ASTTraverser {
 
     private List<String> output;
     private List<HeadingInfo> headingInfoList;
-    private List<BulletListInfo> bulletListInfoList;
+    private List<BulletListItemInfo> bulletListInfoList;
     private List<LinkInfo> linkInfoList;
     private List<MetadataInfo> metadataInfoList;
     private List<ParagraphInfo> paragraphInfoList;
@@ -61,7 +61,7 @@ public class ASTTraverser {
             new VisitHandler<>(AutoLink.class, this::visitAutoLink),
             new VisitHandler<>(Reference.class, this::visitReference),
             new VisitHandler<>(YamlFrontMatterBlock.class, this::visitMetadata),
-            new VisitHandler<>(BulletList.class, this::visitBulletList),
+            new VisitHandler<>(BulletListItem.class, this::visitBulletListItem),
             new VisitHandler<>(Image.class, this::visitImage)
         );
     }
@@ -120,10 +120,10 @@ public class ASTTraverser {
         visitor.visitChildren(paragraph);
     }
 
-    private void visitBulletList(BulletList list){
-        int startLineNumber = list.getStartLineNumber() + 1;
-        bulletListInfoList.add(new BulletListInfo(list, startLineNumber));
-        visitor.visitChildren(list);
+    private void visitBulletListItem(BulletListItem item){
+        int startLineNumber = item.getStartLineNumber() + 1;
+        bulletListInfoList.add(new BulletListItemInfo(item, startLineNumber));
+        visitor.visitChildren(item);
     }
 
     private void visitReference(Reference reference) {
