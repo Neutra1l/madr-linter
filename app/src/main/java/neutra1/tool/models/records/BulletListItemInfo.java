@@ -9,6 +9,9 @@ public record BulletListItemInfo(BulletListItem item, int startLineNumber){
     public String extractHeadItemContent() {
         StringBuilder headItemText = new StringBuilder();
         Node child = this.item().getFirstChild();
+        String firstLine = this.item().getChars().toString().split("\n")[0];
+        String afterHyphen = firstLine.substring(firstLine.indexOf("-") + 1);
+        int spaceAfterHyphen = afterHyphen.length() - afterHyphen.stripLeading().length();
         while (child != null) {
             if (child instanceof ListBlock) {
                 break; 
@@ -16,6 +19,6 @@ public record BulletListItemInfo(BulletListItem item, int startLineNumber){
             headItemText.append(child.getChars().toString().trim());
             child = child.getNext();
         }
-        return "- " + headItemText.toString().trim();
+        return this.item.getOpeningMarker() + " ".repeat(spaceAfterHyphen) + headItemText.toString().trim();
     }
 }
