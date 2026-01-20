@@ -49,10 +49,10 @@ public class Reporter {
         }
         try{
             if (override){
-                Files.writeString(outputPath, diagnosis.toString(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+                Files.writeString(outputPath, diagnosis.toString(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
             }
             else {
-                Files.writeString(outputPath, diagnosis.toString(), StandardOpenOption.CREATE);
+                Files.writeString(outputPath, diagnosis.toString());
             }
         }
         catch (IOException e){
