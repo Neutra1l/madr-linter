@@ -1,7 +1,5 @@
 package neutra1.tool.rules.impl;
 
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,11 +41,11 @@ public class Rule08 extends LinkRule{
             if (isExternalLink(urlText)){
                 try{
                     int status = establishHeadConnection(urlText);
-                    if (status < 200 || status > 400){
+                    if (status < 200 || status > 400 && status != 403){
                         invalidExternalLinks.put(urlText, lineNumber);
                     }
                 }
-                catch (IOException e){
+                catch (Exception e){
                     invalidExternalLinks.put(urlText, lineNumber);
                 }
             }

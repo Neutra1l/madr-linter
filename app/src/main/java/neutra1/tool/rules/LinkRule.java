@@ -1,15 +1,17 @@
 package neutra1.tool.rules;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URI;
-import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,13 +59,19 @@ public abstract class LinkRule extends AbstractRule{
         }
     }
 
-    protected int establishHeadConnection(String urlText) throws MalformedURLException, IOException, ProtocolException {
-        URL url = URI.create(urlText).toURL();
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("HEAD");
-        conn.setConnectTimeout(5000);
-        conn.setReadTimeout(5000);
-        int status = conn.getResponseCode();
+    protected int establishHeadConnection(String urlText) throws MalformedURLException, IOException, ProtocolException, InterruptedException {
+        final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).connectTimeout(Duration.ofSeconds(5)).build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlText))
+                                         // Pretend to be a human on a Firefox browser sending this request on a Windows machine
+                                         // See here: https://www.useragentstring.com/pages/Firefox/
+                                         // and here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/User-Agent
+                                         // in case you forget wtf this is
+                                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0")
+                                         .timeout(Duration.ofSeconds(5))
+                                         .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                                         .build();
+        HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+        int status = response.statusCode();
         return status;
     }
 
