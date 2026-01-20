@@ -13,7 +13,7 @@ public record HeadingInfo(String text, String rawText, String anchorRefId, int l
         StringBuilder sb = new StringBuilder();
         List<Node> body = (includeSubsections) ? this.bodyWithSubsections : this.body;
         for (Node node : body){
-            String current = node.toString();
+            String current = node.getChars().toString();
             sb.append(current);
         }
         return sb.toString();
