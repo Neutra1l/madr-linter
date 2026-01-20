@@ -31,7 +31,7 @@ public class Rule07 extends HeadingRule{
         StringBuilder description = new StringBuilder();
         for (HeadingInfo heading : headingList){
             String headingText = heading.text();
-            if (containsDigitPattern.matcher(headingText).matches()){
+            if (containsDigitPattern.matcher(headingText).matches() && heading.level() > 1){
                 violatingHeadings.put(headingText, heading.startLineNumber());
             }
         }
