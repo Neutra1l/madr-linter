@@ -1,6 +1,7 @@
 package neutra1.tool.rules.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.vladsch.flexmark.ast.BulletListItem;
@@ -33,7 +34,16 @@ public class Rule13 extends SectionRule{
             for (int j = 0; j < items.size(); j++){
                 BulletListItem item = items.get(j);
                 if (!item.getOpeningMarker().toString().equals("*")){
-                    violatingItems.add(LISTING_INDENT_SHORT + "Line " + (item.getStartLineNumber() + 1) + ": " + item.getChars().toString().trim() + "\n");
+                    String listItemBody = item.getChars().toString().trim();
+                    List<String> itemLines = Arrays.asList(listItemBody.split("\n"));
+                    List<String> itemLinesExceptFirst = itemLines.subList(1, itemLines.size());
+                    int startLineNumber = item.getStartLineNumber() + 1;
+                    final String line = "Line " + startLineNumber;
+                    final String extraLinesIndent = " ".repeat(line.length() + 1);
+                    StringBuilder sb = new StringBuilder(itemLines.get(0) + "\n");
+                    itemLinesExceptFirst.stream().forEach(text -> sb.append(extraLinesIndent + LISTING_INDENT_SHORT).append(text + "\n"));
+                    String formattedBody = sb.toString();
+                    violatingItems.add(LISTING_INDENT_SHORT + line + ": " + formattedBody);
                 }
             }
         }
