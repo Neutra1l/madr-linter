@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum MandatorySection {
     
-    CONTEXT(List.of("Context and Problem Statement", "Context and Problem"), 2),
+    CONTEXT(List.of("Context and Problem Statement", "Context and Problem", "Context"), 2),
     CONSIDERED_OPTIONS(List.of("Considered Options", "Considered Alternatives", "Explored Options", "Explored Alternatives"), 2),
     DECISION_OUTCOME(List.of("Decision Outcome"), 2);
 
