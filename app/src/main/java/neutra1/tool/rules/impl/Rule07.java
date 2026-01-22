@@ -42,7 +42,7 @@ public class Rule07 extends HeadingRule{
         description.append("Headings should not contain numbers. The following headings contain them:\n");
         while (iterator.hasNext()){
             Map.Entry<String, Integer> currentPair = iterator.next();
-            description.append(DESCRIPTION_INDENT_SHORT);
+            description.append(LISTING_INDENT_SHORT);
             description.append("Line " + currentPair.getValue() + ": " + currentPair.getKey() + "\n");
         }
         reporter.report(new Violation(RULE_ID, description.toString(), -1));

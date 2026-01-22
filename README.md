@@ -49,7 +49,7 @@ Learn more about MADR [here](https://www.ozimmer.ch/practices/2022/11/22/MADRTem
 ```
 ### Naming rules
 ```
-05*. The numberings of ADRs within the containing folder should be consecutive(i.e. no skips)
+05. The numberings of ADRs within the containing folder should be consecutive(i.e. no skips)
      and start with either 0000 or 0001.
 06. Adherence to naming conventions for MADR (The format is as follows: xxxx-short-description-of-decision.md).
 09. No collisions of numberings between MADRs in the same folder.
@@ -59,7 +59,8 @@ Learn more about MADR [here](https://www.ozimmer.ch/practices/2022/11/22/MADRTem
 ### Link rules
 ```
 08. Links must work (clickable and lead to an actual website or directory).
-14. Images must work (must be renderable by any Markdown renderer and, if it is an image link, the link must work).
+14. Images must work (must be renderable by any Markdown renderer and 
+    if it is an image link, the link must work).
 ```
 ### Metadata rules
 ```
