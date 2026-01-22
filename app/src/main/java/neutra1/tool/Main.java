@@ -18,6 +18,7 @@ import neutra1.tool.rules.impl.Rule01;
 import neutra1.tool.rules.impl.Rule02;
 import neutra1.tool.rules.impl.Rule03;
 import neutra1.tool.rules.impl.Rule04;
+import neutra1.tool.rules.impl.Rule05;
 import neutra1.tool.rules.impl.Rule06;
 import neutra1.tool.rules.impl.Rule07;
 import neutra1.tool.rules.impl.Rule08;
@@ -74,6 +75,7 @@ public class Main implements Runnable {
             new Rule02(),
             new Rule03(),
             new Rule04(),
+            new Rule05(),
             new Rule06(),
             new Rule07(),
             new Rule08(),

@@ -1,5 +1,6 @@
 package neutra1.tool.core;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +98,10 @@ public class ASTTraverser {
         Parser parser = Parser.builder(options).build();
         this.document = parser.parse(markdown);
         visitor.visit(this.document);
+    }
+
+    public String getMadrFolder(){
+        return Paths.get(madrPath).getParent().toString();
     }
 
     private void visitHeading(Heading heading) {
