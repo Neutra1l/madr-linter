@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.atomic;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import neutra1.linter.models.records.MetadataInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.MetadataRule;
 
-public class Rule12 extends MetadataRule{
+public class Rule12 extends MetadataRule implements IAtomicRule {
     
     private final String RULE_ID = "MADR12";
 

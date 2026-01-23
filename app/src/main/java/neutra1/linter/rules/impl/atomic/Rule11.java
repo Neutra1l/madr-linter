@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.atomic;
 
 import neutra1.linter.models.enums.MandatorySection;
 import neutra1.linter.models.enums.OptionalSection;
@@ -6,7 +6,7 @@ import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.HeadingRule;
 
-public class Rule11 extends HeadingRule{
+public class Rule11 extends HeadingRule implements IAtomicRule {
 
     private final String RULE_ID_A = "MADR11a";
     private final String RULE_ID_B = "MADR11b";

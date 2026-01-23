@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.atomic;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -10,7 +10,7 @@ import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.HeadingRule;
 
-public class Rule07 extends HeadingRule{
+public class Rule07 extends HeadingRule implements IAtomicRule {
 
     private final String RULE_ID = "MADR07";
     private final Pattern containsDigitPattern = Pattern.compile(".*\\d.*");

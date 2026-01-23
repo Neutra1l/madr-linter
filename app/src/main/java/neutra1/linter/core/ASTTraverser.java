@@ -44,7 +44,7 @@ public class ASTTraverser {
     private NodeVisitor visitor;
     private static ASTTraverser astTraverser = null;
     private Node document;
-    private String madrPath;
+    private String targetPath;
 
     private ASTTraverser() {
         this.output = new ArrayList<>();
@@ -68,7 +68,7 @@ public class ASTTraverser {
 
     private ASTTraverser(String madrPath) {
         this();
-        this.madrPath = madrPath;
+        this.targetPath = madrPath;
     }
 
     public static ASTTraverser getASTTraverserInstance() {
@@ -83,7 +83,7 @@ public class ASTTraverser {
             astTraverser = new ASTTraverser(madrPath);
         }
         else{
-            setMadrPath(madrPath);
+            setTargetPath(madrPath);
         }
         return astTraverser;
         
@@ -100,7 +100,7 @@ public class ASTTraverser {
     }
 
     public String getMadrFolder(){
-        return Paths.get(madrPath).getParent().toString();
+        return Paths.get(targetPath).getParent().toString();
     }
 
     private void visitHeading(Heading heading) {
@@ -232,7 +232,7 @@ public class ASTTraverser {
         return bodyNodes;
     }
 
-    private static void setMadrPath(String madrPath) {
-        astTraverser.madrPath = madrPath;
+    private static void setTargetPath(String madrPath) {
+        astTraverser.targetPath = madrPath;
     }
 }

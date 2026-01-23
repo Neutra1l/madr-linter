@@ -1,10 +1,10 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.atomic;
 
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.SectionRule;
 
-public class Rule02 extends SectionRule {
+public class Rule02 extends SectionRule implements IAtomicRule {
 
     private final String RULE_ID = "MADR02";
 

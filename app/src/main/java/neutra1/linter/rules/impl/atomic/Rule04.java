@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.atomic;
 
 import com.vladsch.flexmark.util.ast.Node;
 
@@ -8,7 +8,7 @@ import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.SectionRule;
 
-public class Rule04 extends SectionRule {
+public class Rule04 extends SectionRule implements IAtomicRule {
 
     private final String RULE_ID = "MADR04";
 

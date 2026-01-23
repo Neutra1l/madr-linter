@@ -25,7 +25,7 @@ public abstract class NamingRule extends AbstractRule{
     }
 
     private List<Path> getAllFilesInMadrFolder(){
-        String madrPath = traverser.getMadrPath();
+        String madrPath = traverser.getTargetPath();
         Path parentFolder = Path.of(madrPath).getParent();
         DirectoryStream<Path> directoryStream = null;
         List<Path> paths = null;

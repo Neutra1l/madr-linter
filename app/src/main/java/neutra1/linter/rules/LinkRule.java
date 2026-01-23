@@ -76,7 +76,7 @@ public abstract class LinkRule extends AbstractRule{
     }
 
     protected boolean pathExists(String urlText) throws InvalidPathException {
-        Path madrPath = Paths.get(traverser.getMadrPath());
+        Path madrPath = Paths.get(traverser.getTargetPath());
         Path containingDir = madrPath.getParent();
         Path resolvedPath = containingDir.resolve(urlText).normalize();
         return Files.exists(resolvedPath);    

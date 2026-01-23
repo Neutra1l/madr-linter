@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.global;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,7 +12,7 @@ import java.util.Map;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.NamingRule;
 
-public class Rule09 extends NamingRule{
+public class Rule09 extends NamingRule implements IGlobalRule {
 
     private final String RULE_ID = "MADR09";
 

@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.atomic;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +8,7 @@ import neutra1.linter.models.records.LinkInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.LinkRule;
 
-public class Rule08 extends LinkRule{
+public class Rule08 extends LinkRule implements IAtomicRule {
 
     private final String RULE_ID_A = "MADR08a"; 
     private final String RULE_ID_B = "MADR08b";

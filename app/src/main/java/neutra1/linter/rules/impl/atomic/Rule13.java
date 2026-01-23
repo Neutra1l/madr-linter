@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.atomic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import neutra1.linter.models.records.BulletListItemInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.SectionRule;
 
-public class Rule13 extends SectionRule{
+public class Rule13 extends SectionRule implements IAtomicRule {
     
     private final String RULE_ID = "MADR13";
 

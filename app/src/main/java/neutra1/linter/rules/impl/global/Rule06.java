@@ -1,11 +1,11 @@
-package neutra1.linter.rules.impl;
+package neutra1.linter.rules.impl.global;
 
 import java.util.List;
 
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.NamingRule;
 
-public class Rule06 extends NamingRule {
+public class Rule06 extends NamingRule implements IGlobalRule {
 
     private final String RULE_ID_A = "MADR06a";
     private final String RULE_ID_B = "MADR06b";

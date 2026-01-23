@@ -14,20 +14,22 @@ import org.jspecify.annotations.NonNull;
 import neutra1.linter.core.ASTTraverser;
 import neutra1.linter.core.Reporter;
 import neutra1.linter.rules.AbstractRule;
-import neutra1.linter.rules.impl.Rule01;
-import neutra1.linter.rules.impl.Rule02;
-import neutra1.linter.rules.impl.Rule03;
-import neutra1.linter.rules.impl.Rule04;
-import neutra1.linter.rules.impl.Rule05;
-import neutra1.linter.rules.impl.Rule06;
-import neutra1.linter.rules.impl.Rule07;
-import neutra1.linter.rules.impl.Rule08;
-import neutra1.linter.rules.impl.Rule09;
-import neutra1.linter.rules.impl.Rule10;
-import neutra1.linter.rules.impl.Rule11;
-import neutra1.linter.rules.impl.Rule12;
-import neutra1.linter.rules.impl.Rule13;
-import neutra1.linter.rules.impl.Rule14;
+import neutra1.linter.rules.impl.atomic.IAtomicRule;
+import neutra1.linter.rules.impl.atomic.Rule01;
+import neutra1.linter.rules.impl.atomic.Rule02;
+import neutra1.linter.rules.impl.atomic.Rule03;
+import neutra1.linter.rules.impl.atomic.Rule04;
+import neutra1.linter.rules.impl.atomic.Rule07;
+import neutra1.linter.rules.impl.atomic.Rule08;
+import neutra1.linter.rules.impl.atomic.Rule10;
+import neutra1.linter.rules.impl.atomic.Rule11;
+import neutra1.linter.rules.impl.atomic.Rule12;
+import neutra1.linter.rules.impl.atomic.Rule13;
+import neutra1.linter.rules.impl.atomic.Rule14;
+import neutra1.linter.rules.impl.global.IGlobalRule;
+import neutra1.linter.rules.impl.global.Rule05;
+import neutra1.linter.rules.impl.global.Rule06;
+import neutra1.linter.rules.impl.global.Rule09;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -37,6 +39,7 @@ import picocli.CommandLine.Parameters;
     name = "madrlint",
     description = "Lint MADR files",
     mixinStandardHelpOptions = true,
+    customSynopsis = "madrlint [-hOqV] [-n <ruleNumber>[,ruleNumber...]>] [-o <outputFile>] <madrFile>",
     version="1.0.0"
 )
 public class Main implements Runnable {
@@ -46,7 +49,7 @@ public class Main implements Runnable {
     private final Path currentDir = Paths.get(System.getProperty("user.dir"));
 
     @Parameters(index = "0", description = "Path to MADR document.")
-    private String madrFile;
+    private String targetPath;
     @Option(names = {"--out", "-o"}, description = "Output the diagnostics to a file. If that file does not exist, it will be created.")
     private String outputFile;
     @Option(names = {"-O", "--override"}, description = "If the given output file already exists, it will be overwritten.")
@@ -58,18 +61,9 @@ public class Main implements Runnable {
 
     @Override
     public void run() {
-        madrFile = currentDir.resolve(madrFile).toString();
-        ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(madrFile);
+        targetPath = currentDir.resolve(targetPath).toString();
+        ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(targetPath);
         Reporter reporter = Reporter.getReporterInstance();
-        try {
-            astTraverser.traverse(readFile(madrFile));
-        }
-        catch (IOException ioException){
-            System.out.println(RED + "Error: unable to read input file " + madrFile + RESET);
-            System.exit(2);
-        }
-        System.out.println("INFO: Linting on " + madrFile + "...\n");
-        // astTraverser.getOutput().toString().lines().forEach(System.out::println);
         List<@NonNull AbstractRule> rules = List.of(
             new Rule01(),
             new Rule02(),
@@ -86,14 +80,34 @@ public class Main implements Runnable {
             new Rule13(),
             new Rule14()
         );
+        System.out.println("INFO: Linting on " + targetPath + "...\n");
+        if (Files.isRegularFile(Paths.get(targetPath))){
+            try {
+                astTraverser.traverse(readFile(targetPath));
+                rules = rules.stream().filter(rule -> rule instanceof IAtomicRule).toList();
+            }
+            catch (IOException ioException){
+                System.out.println(RED + "Error: unable to read input file " + targetPath + RESET);
+                System.exit(1);
+            }
+        }
+        else if (Files.isDirectory(Paths.get(targetPath))){
+            rules = rules.stream().filter(rule -> rule instanceof IGlobalRule).toList(); 
+        }
+        else {
+            System.out.println(RED + "Error: Path " + targetPath + " does not exist." + RESET);
+            System.exit(1);
+        }
+        // astTraverser.getOutput().toString().lines().forEach(System.out::println);
         rules.stream().filter(rule -> !disabledRules.contains(rule.getRuleNumber())).forEach(rule -> rule.check());
         int disabledRuleCount = disabledRules.size();
         int totalRuleCount = rules.size();
+        int disabledRelevantRuleCount = rules.stream().filter(rule -> disabledRules.contains(rule.getRuleNumber())).toList().size();
         if (outputFile == null){  
-            reporter.outputDiagnostics(disabledRuleCount, totalRuleCount, quietMode);
+            reporter.outputDiagnostics(disabledRuleCount, disabledRelevantRuleCount, totalRuleCount, quietMode);
         } 
         else {
-            reporter.outputDiagnostics(outputFile, disabledRuleCount, totalRuleCount, override, quietMode);
+            reporter.outputDiagnostics(outputFile, disabledRuleCount, disabledRelevantRuleCount, totalRuleCount, override, quietMode);
         }
     }
 
