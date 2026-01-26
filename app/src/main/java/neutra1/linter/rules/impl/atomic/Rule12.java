@@ -6,6 +6,7 @@ import com.github.sbaudoin.yamllint.LintProblem;
 
 import neutra1.linter.models.records.MetadataInfo;
 import neutra1.linter.models.records.Violation;
+import neutra1.linter.rules.IAtomicRule;
 import neutra1.linter.rules.MetadataRule;
 
 public class Rule12 extends MetadataRule implements IAtomicRule {

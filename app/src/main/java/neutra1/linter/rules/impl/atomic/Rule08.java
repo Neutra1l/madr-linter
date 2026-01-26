@@ -6,6 +6,7 @@ import java.util.List;
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.LinkInfo;
 import neutra1.linter.models.records.Violation;
+import neutra1.linter.rules.IAtomicRule;
 import neutra1.linter.rules.LinkRule;
 
 public class Rule08 extends LinkRule implements IAtomicRule {

@@ -8,6 +8,7 @@ import com.vladsch.flexmark.ast.BulletListItem;
 
 import neutra1.linter.models.records.BulletListItemInfo;
 import neutra1.linter.models.records.Violation;
+import neutra1.linter.rules.IAtomicRule;
 import neutra1.linter.rules.SectionRule;
 
 public class Rule13 extends SectionRule implements IAtomicRule {

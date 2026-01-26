@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import neutra1.linter.models.records.Violation;
+import neutra1.linter.rules.IGlobalRule;
 import neutra1.linter.rules.NamingRule;
 
 public class Rule05 extends NamingRule implements IGlobalRule {

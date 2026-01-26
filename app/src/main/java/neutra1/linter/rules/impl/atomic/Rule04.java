@@ -6,6 +6,7 @@ import neutra1.linter.models.enums.DecisionOutcomeElements;
 import neutra1.linter.models.enums.MandatorySection;
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
+import neutra1.linter.rules.IAtomicRule;
 import neutra1.linter.rules.SectionRule;
 
 public class Rule04 extends SectionRule implements IAtomicRule {

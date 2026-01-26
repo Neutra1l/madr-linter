@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.HeadingRule;
+import neutra1.linter.rules.IAtomicRule;
 
 public class Rule07 extends HeadingRule implements IAtomicRule {
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
+import neutra1.linter.rules.IAtomicRule;
 import neutra1.linter.rules.SectionRule;
 
 public class Rule02 extends SectionRule implements IAtomicRule {

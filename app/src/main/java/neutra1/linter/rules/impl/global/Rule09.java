@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import neutra1.linter.models.records.Violation;
+import neutra1.linter.rules.IGlobalRule;
 import neutra1.linter.rules.NamingRule;
 
 public class Rule09 extends NamingRule implements IGlobalRule {
