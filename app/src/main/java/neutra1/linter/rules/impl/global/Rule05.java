@@ -38,7 +38,7 @@ public class Rule05 extends NamingRule implements IGlobalRule {
             String description = "Expected the smallest MADR Id in the folder to be either 0000 or 0001. Found " + formattedId;
             reporter.report(new Violation(RULE_ID_A, description, -1));
         }
-        Path madrFolder = Paths.get(traverser.getMadrFolder());
+        Path madrFolder = Paths.get(traverser.getInternalPath());
         List<DisconnectedMadrPair> disconnectedMadrPairList = new ArrayList<>();
         for (int i = 0; i < madrIds.size() - 1; i++){
             int diff = madrIds.get(i+1) - madrIds.get(i);

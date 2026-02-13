@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -17,25 +18,29 @@ public abstract class NamingRule extends AbstractRule{
     protected List<String> nonMarkdownFiles;
     protected List<String> madrsWithNamingViolations;
     protected List<String> validMadrNames;
-
+    
     public NamingRule(){
         super();
         nonMarkdownFiles = new ArrayList<>();
         madrsWithNamingViolations = new ArrayList<>();
         validMadrNames = new ArrayList<>();
-        classifyFilesInMadrFolder();
+        if (Files.isDirectory(Paths.get(traverser.getInternalPath()))){
+            classifyFilesInMadrFolder();
+        }
     }
 
     private List<Path> getAllFilesInMadrFolder(){
-        String madrPath = traverser.getTargetPath();
-        Path parentFolder = Path.of(madrPath).getParent();
+        String madrPath = traverser.getInternalPath();
+        Path parentFolder = Path.of(madrPath);
         DirectoryStream<Path> directoryStream = null;
         List<Path> paths = null;
         try {
             directoryStream = Files.newDirectoryStream(parentFolder);
             paths = new ArrayList<>();
             for (Path path : directoryStream){
-                paths.add(path);
+                Path fileName = path.getFileName();
+                Path pathName = Paths.get(traverser.getUserPath(), fileName.toString());
+                paths.add(pathName);
             }
         }
         catch(IOException e){
@@ -62,15 +67,15 @@ public abstract class NamingRule extends AbstractRule{
         Pattern pattern = Pattern.compile(MADR_FILE_NAMING_REGEX);
         for (Path filePath : paths) {
             String fileName = filePath.getFileName().toString();
-            String absolutePath = filePath.toString();
+            String path = filePath.toString();
             if (!fileName.contains(".md")) {
-                this.nonMarkdownFiles.add(absolutePath);
+                this.nonMarkdownFiles.add(path);
             }
             else if (!pattern.matcher(fileName).matches()) {
-                this.madrsWithNamingViolations.add(absolutePath);
+                this.madrsWithNamingViolations.add(path);
             }
             else {
-                this.validMadrNames.add(absolutePath);
+                this.validMadrNames.add(path);
             }
         }
     }
@@ -80,7 +85,7 @@ public abstract class NamingRule extends AbstractRule{
             return;
         }
         StringBuilder description = new StringBuilder(openingMessage);
-        files.stream().forEach(file -> description.append(LISTING_INDENT_LONG).append(file).append("\n"));
+        files.stream().forEach(file -> description.append(LISTING_INDENT_SHORT).append(file).append("\n"));
         reporter.report(new Violation(ruleId, description.toString(), -1));
     }
 }

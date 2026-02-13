@@ -1,6 +1,5 @@
 package neutra1.linter.core;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,8 @@ public class ASTTraverser {
     private NodeVisitor visitor;
     private static ASTTraverser astTraverser = null;
     private Node document;
-    private String targetPath;
+    private String userPath;
+    private String internalPath;
 
     private ASTTraverser() {
         this.output = new ArrayList<>();
@@ -66,9 +66,10 @@ public class ASTTraverser {
         );
     }
 
-    private ASTTraverser(String madrPath) {
+    private ASTTraverser(String madrPath, String internalPath) {
         this();
-        this.targetPath = madrPath;
+        this.userPath = madrPath;
+        this.internalPath = internalPath;
     }
 
     public static ASTTraverser getASTTraverserInstance() {
@@ -78,12 +79,13 @@ public class ASTTraverser {
         return astTraverser;
     }
 
-    public static ASTTraverser getASTTTraverserInstance(String madrPath){
+    public static ASTTraverser getASTTTraverserInstance(String userPath, String internalPath){
         if (astTraverser == null) {
-            astTraverser = new ASTTraverser(madrPath);
+            astTraverser = new ASTTraverser(userPath, internalPath);
         }
         else{
-            setTargetPath(madrPath);
+            setUserPath(userPath);
+            setInternalPath(internalPath);
         }
         return astTraverser;
         
@@ -97,10 +99,6 @@ public class ASTTraverser {
         Parser parser = Parser.builder(options).build();
         this.document = parser.parse(markdown);
         visitor.visit(this.document);
-    }
-
-    public String getMadrFolder(){
-        return Paths.get(targetPath).getParent().toString();
     }
 
     private void visitHeading(Heading heading) {
@@ -232,7 +230,12 @@ public class ASTTraverser {
         return bodyNodes;
     }
 
-    private static void setTargetPath(String madrPath) {
-        astTraverser.targetPath = madrPath;
+    private static void setUserPath(String madrPath) {
+        astTraverser.userPath = madrPath;
+    }
+
+    private static void setInternalPath(String internalPath){
+        astTraverser.internalPath = internalPath;
+    
     }
 }

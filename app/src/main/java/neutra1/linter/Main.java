@@ -30,6 +30,7 @@ import neutra1.linter.rules.IGlobalRule;
 import neutra1.linter.rules.impl.global.Rule05;
 import neutra1.linter.rules.impl.global.Rule06;
 import neutra1.linter.rules.impl.global.Rule09;
+import neutra1.linter.rules.impl.global.Rule15;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -49,7 +50,7 @@ public class Main implements Runnable {
     private final Path currentDir = Paths.get(System.getProperty("user.dir"));
 
     @Parameters(index = "0", description = "Path to MADR document.")
-    private String targetPath;
+    private String userPath;
     @Option(names = {"--out", "-o"}, description = "Output the diagnostics to a file. If that file does not exist, it will be created.")
     private String outputFile;
     @Option(names = {"-O", "--override"}, description = "If the given output file already exists, it will be overwritten.")
@@ -61,8 +62,8 @@ public class Main implements Runnable {
 
     @Override
     public void run() {
-        targetPath = currentDir.resolve(targetPath).toString();
-        ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(targetPath);
+        String internalPath = currentDir.resolve(userPath).toString();
+        ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(userPath, internalPath);
         Reporter reporter = Reporter.getReporterInstance();
         List<@NonNull AbstractRule> rules = List.of(
             new Rule01(),
@@ -78,24 +79,25 @@ public class Main implements Runnable {
             new Rule11(),
             new Rule12(),
             new Rule13(),
-            new Rule14()
+            new Rule14(),
+            new Rule15()
         );
-        System.out.println("INFO: Linting on " + targetPath + "...\n");
-        if (Files.isRegularFile(Paths.get(targetPath))){
+        System.out.println("INFO: Linting on " + userPath + "...\n");
+        if (Files.isRegularFile(Paths.get(internalPath))){
             try {
-                astTraverser.traverse(readFile(targetPath));
+                astTraverser.traverse(readFile(internalPath));
                 rules = rules.stream().filter(rule -> rule instanceof IAtomicRule).toList();
             }
             catch (IOException ioException){
-                System.out.println(RED + "Error: unable to read input file " + targetPath + RESET);
+                System.out.println(RED + "Error: unable to read input file " + userPath + RESET);
                 System.exit(1);
             }
         }
-        else if (Files.isDirectory(Paths.get(targetPath))){
+        else if (Files.isDirectory(Paths.get(internalPath))){
             rules = rules.stream().filter(rule -> rule instanceof IGlobalRule).toList(); 
         }
         else {
-            System.out.println(RED + "Error: Path " + targetPath + " does not exist." + RESET);
+            System.out.println(RED + "Error: Path " + userPath + " does not exist." + RESET);
             System.exit(1);
         }
         // astTraverser.getOutput().toString().lines().forEach(System.out::println);
