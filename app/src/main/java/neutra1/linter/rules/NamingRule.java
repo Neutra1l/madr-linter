@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import neutra1.linter.models.records.Violation;
+
 public abstract class NamingRule extends AbstractRule{
     
     protected final String ruleType = "Naming Rule";
@@ -71,5 +73,14 @@ public abstract class NamingRule extends AbstractRule{
                 this.validMadrNames.add(absolutePath);
             }
         }
+    }
+
+    protected void report(List<String> files, String ruleId, String openingMessage) {
+        if (files.isEmpty()) {
+            return;
+        }
+        StringBuilder description = new StringBuilder(openingMessage);
+        files.stream().forEach(file -> description.append(LISTING_INDENT_LONG).append(file).append("\n"));
+        reporter.report(new Violation(ruleId, description.toString(), -1));
     }
 }
