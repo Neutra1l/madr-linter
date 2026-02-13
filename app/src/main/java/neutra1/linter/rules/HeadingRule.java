@@ -12,7 +12,7 @@ public abstract class HeadingRule extends AbstractRule{
         super();
     }
 
-    public HeadingInfo getHeadingInfoByText(List<String> texts, boolean ignoreCase){
+    protected HeadingInfo getHeadingInfoByText(List<String> texts, boolean ignoreCase){
         List<HeadingInfo> headingInfoList = traverser.getHeadingInfoList();
         List<String> headingList = headingInfoList.stream().map(headingInfo -> headingInfo.text()).toList();
         if (ignoreCase){
