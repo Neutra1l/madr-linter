@@ -1,13 +1,14 @@
 package neutra1.linter.models.records;
 
 import java.util.List;
+import java.util.Map;
 
 import com.vladsch.flexmark.util.ast.Node;
 
 import neutra1.linter.core.ASTTraverser;
 
 public record HeadingInfo(String text, String rawText, String anchorRefId, int level, 
-                          int startLineNumber, List<Node> body, List<Node> bodyWithSubsections) {
+                          int startLineNumber, List<Node> body, List<Node> bodyWithSubsections, Map<String, List<Node>> subHeadingBodyMap) {
 
     public String getBodyUnderHeading(boolean includeSubsections){
         StringBuilder sb = new StringBuilder();

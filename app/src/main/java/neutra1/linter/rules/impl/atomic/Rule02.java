@@ -2,6 +2,9 @@ package neutra1.linter.rules.impl.atomic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.vladsch.flexmark.util.ast.Node;
 
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
@@ -22,12 +25,31 @@ public class Rule02 extends SectionRule implements IAtomicRule {
     @Override
     public void check() {
         List<HeadingInfo> emptyBodyHeadings = new ArrayList<>();
-        for (HeadingInfo headingInfo : traverser.getHeadingInfoList()) {
-            if (headingInfo.getBodyUnderHeading(true).isBlank()) {
+        List<HeadingInfo> headingInfoList = traverser.getHeadingInfoList();
+        for (HeadingInfo headingInfo : headingInfoList){
+            if (headingInfo.getBodyUnderHeading(true).isBlank()){
                 emptyBodyHeadings.add(headingInfo);
+                continue;
             }
-        } 
-        if (!emptyBodyHeadings.isEmpty()){
+            Map<String, List<Node>> subSections = headingInfo.subHeadingBodyMap();
+            subSections.forEach((heading, body) -> {
+                if (body.size() == 0){
+                    return;
+                }
+                boolean allSubsectionBodiesBlank = true;
+                for (Node node : body){
+                    String text = node.getChars().toString();
+                    if (!text.isBlank()){
+                        allSubsectionBodiesBlank = false;
+                        break;
+                    }
+                }
+                if (allSubsectionBodiesBlank){
+                    emptyBodyHeadings.add(headingInfo);
+                }
+            });
+        }
+        if (!emptyBodyHeadings.isEmpty()) {
             StringBuilder desc = new StringBuilder("The following sections are empty:\n");
             emptyBodyHeadings.forEach(headingInfo -> {
                 String heading = headingInfo.text();

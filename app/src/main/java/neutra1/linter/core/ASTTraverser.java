@@ -1,7 +1,9 @@
 package neutra1.linter.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.sbaudoin.yamllint.LintProblem;
 import com.github.sbaudoin.yamllint.Linter;
@@ -109,8 +111,15 @@ public class ASTTraverser {
         int level = heading.getLevel();
         List<Node> body = buildBody(heading, false);
         List<Node> bodyWithSubsections = buildBody(heading, true);
+        List<Heading> subHeadings = getSubheadings(heading);
         int startLineNumber = heading.getStartLineNumber() + 1;
-        headingInfoList.add(new HeadingInfo(text, rawText, anchorRefId, level, startLineNumber, body, bodyWithSubsections));
+        Map<String, List<Node>> subHeadingBodyMap = new HashMap<>();
+        for (Heading subHeading : subHeadings){
+            String subText = subHeading.getText().toString();
+            List<Node> subBody = buildBody(subHeading, false);
+            subHeadingBodyMap.put(subText, subBody);
+        }
+        headingInfoList.add(new HeadingInfo(text, rawText, anchorRefId, level, startLineNumber, body, bodyWithSubsections, subHeadingBodyMap));
         visitor.visitChildren(heading);
     }
 
@@ -230,6 +239,22 @@ public class ASTTraverser {
         return bodyNodes;
     }
 
+    private List<Heading> getSubheadings(Heading parentHeading) {
+        List<Heading> subheadings = new ArrayList<>();
+        int parentLevel = parentHeading.getLevel();
+        Node next = parentHeading.getNext();
+        while (next != null) {
+            if (next instanceof Heading current) {
+                if (current.getLevel() > parentLevel) {
+                    subheadings.add(current);
+                } else {
+                    break;
+                }
+            }
+            next = next.getNext();
+        }
+    return subheadings;
+}
     private static void setUserPath(String madrPath) {
         astTraverser.userPath = madrPath;
     }
