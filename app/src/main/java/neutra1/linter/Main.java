@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jspecify.annotations.NonNull;
-
 import neutra1.linter.core.ASTTraverser;
 import neutra1.linter.core.Reporter;
 import neutra1.linter.rules.AbstractRule;
@@ -65,7 +63,7 @@ public class Main implements Runnable {
         String internalPath = currentDir.resolve(userPath).toString();
         ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(userPath, internalPath);
         Reporter reporter = Reporter.getReporterInstance();
-        List<@NonNull AbstractRule> rules = List.of(
+        List<AbstractRule> rules = List.of(
             new Rule01(),
             new Rule02(),
             new Rule03(),

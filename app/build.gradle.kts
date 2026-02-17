@@ -21,8 +21,6 @@ dependencies {
     // Testing
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    // Extra Java Google libs
-    implementation(libs.guava)
     // Picocli for CLI dev
     implementation("info.picocli:picocli:4.7.7")
     annotationProcessor("info.picocli:picocli-codegen:4.7.5")

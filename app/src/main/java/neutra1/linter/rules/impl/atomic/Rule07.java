@@ -31,7 +31,7 @@ public class Rule07 extends HeadingRule implements IAtomicRule {
                 desc.append(LISTING_INDENT_SHORT);
                 desc.append("Line " + headingLevelOne.startLineNumber() + ": " + headingLevelOne.text() + "\n");
             }
-            reporter.report(new Violation(RULE_ID, desc.toString(), -1));
+            reporter.report(new Violation(RULE_ID, desc.toString(), -1));   
         }
     }
 }

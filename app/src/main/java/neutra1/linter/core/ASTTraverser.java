@@ -104,7 +104,6 @@ public class ASTTraverser {
     }
 
     private void visitHeading(Heading heading) {
-        output.add("Heading level " + heading.getLevel() + ": " + heading.getText() + ". Line: " + heading.getStartLineNumber());
         String text = heading.getText().toString();
         String rawText = heading.getChars().toString();
         String anchorRefId = heading.getAnchorRefId();
@@ -124,7 +123,6 @@ public class ASTTraverser {
     }
 
     private void visitParagraph(Paragraph paragraph) {
-        output.add("Paragraph: " + paragraph.getChars());
         String text = paragraph.getChars().toString();
         int startLineNumber = paragraph.getStartLineNumber() + 1;
         paragraphInfoList.add(new ParagraphInfo(text, startLineNumber));
@@ -138,12 +136,10 @@ public class ASTTraverser {
     }
 
     private void visitReference(Reference reference) {
-        output.add("Reference: " + reference.getTitle() + " -> " + reference.getUrl());
         visitor.visitChildren(reference);
     }
 
     private void visitLink(Link link){
-        output.add("Link: " + link.getText() + " url: " + link.toString());
         String text = link.getText().toString();
         String url = link.getUrl().toString();
         int startLineNumber = link.getStartLineNumber() + 1;
@@ -152,7 +148,6 @@ public class ASTTraverser {
     }
 
     private void visitAutoLink(AutoLink autoLink){
-        output.add("Auto link:" + autoLink.getUrl());
         String url = autoLink.getUrl().toString();
         int startLineNumber = autoLink.getStartLineNumber() + 1;
 
@@ -209,7 +204,6 @@ public class ASTTraverser {
     }
 
     private void visitImage(Image image){
-        output.add("Image: " + image.getChars().toString());
         String text = image.getText().toString();
         String url = image.getUrl().toString();
         int startLineNumber = image.getStartLineNumber();
