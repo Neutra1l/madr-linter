@@ -1,5 +1,6 @@
 package neutra1.linter.core;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +26,10 @@ import com.vladsch.flexmark.ext.yaml.front.matter.YamlFrontMatterExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 
 import lombok.Getter;
+import neutra1.linter.models.enums.LinkType;
+import neutra1.linter.models.enums.ResourceType;
 import neutra1.linter.models.records.BulletListItemInfo;
 import neutra1.linter.models.records.HeadingInfo;
-import neutra1.linter.models.records.ImageInfo;
 import neutra1.linter.models.records.LinkInfo;
 import neutra1.linter.models.records.MetadataInfo;
 import neutra1.linter.models.records.ParagraphInfo;
@@ -41,7 +43,6 @@ public class ASTTraverser {
     private List<LinkInfo> linkInfoList;
     private List<MetadataInfo> metadataInfoList;
     private List<ParagraphInfo> paragraphInfoList;
-    private List<ImageInfo> imageInfoList;
     private NodeVisitor visitor;
     private static ASTTraverser astTraverser = null;
     private Node document;
@@ -53,7 +54,6 @@ public class ASTTraverser {
         this.linkInfoList = new ArrayList<>();
         this.metadataInfoList = new ArrayList<>();
         this.paragraphInfoList = new ArrayList<>();
-        this.imageInfoList = new ArrayList<>();
         this.visitor = new NodeVisitor(
             new VisitHandler<>(Heading.class, this::visitHeading),
             new VisitHandler<>(Paragraph.class, this::visitParagraph),
@@ -122,7 +122,9 @@ public class ASTTraverser {
         String text = link.getText().toString();
         String url = link.getUrl().toString();
         int startLineNumber = link.getStartLineNumber() + 1;
-        linkInfoList.add(new LinkInfo(text, url, startLineNumber));
+        LinkType linkType = (isExternalLink(url)) ? LinkType.EXTERNAL : LinkType.LOCAL;
+        ResourceType resourceType = ResourceType.FILE;
+        linkInfoList.add(new LinkInfo(text, url, startLineNumber, linkType, resourceType));
         visitor.visitChildren(link);
     }
 
@@ -130,7 +132,7 @@ public class ASTTraverser {
         String url = autoLink.getUrl().toString();
         int startLineNumber = autoLink.getStartLineNumber() + 1;
 
-        linkInfoList.add(new LinkInfo(null, url, startLineNumber));
+        linkInfoList.add(new LinkInfo(null, url, startLineNumber, LinkType.EXTERNAL, ResourceType.FILE));
         visitor.visitChildren(autoLink);
     }
 
@@ -186,8 +188,9 @@ public class ASTTraverser {
         String text = image.getText().toString();
         String url = image.getUrl().toString();
         int startLineNumber = image.getStartLineNumber() + 1;
-
-        imageInfoList.add(new ImageInfo(text, url, startLineNumber));
+        LinkType linkType = (isExternalLink(url)) ? LinkType.EXTERNAL : LinkType.LOCAL;
+        ResourceType resourceType = ResourceType.IMAGE;
+        linkInfoList.add(new LinkInfo(text, url, startLineNumber, linkType, resourceType));
         visitor.visitChildren(image);
     }
 
@@ -227,6 +230,18 @@ public class ASTTraverser {
             next = next.getNext();
         }
     return subheadings;
+    }
+
+    private boolean isExternalLink(String url){
+        try {
+        URI uri = new URI(url);
+        return uri.getScheme() != null &&
+               (uri.getScheme().equalsIgnoreCase("http") ||
+                uri.getScheme().equalsIgnoreCase("https"));
+        } 
+        catch (Exception e) {
+            return false;
+        }
     }
 
 }

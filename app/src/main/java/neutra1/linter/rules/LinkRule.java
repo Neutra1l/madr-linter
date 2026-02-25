@@ -12,7 +12,6 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
 
 import neutra1.linter.helper.LintContext;
@@ -25,16 +24,8 @@ public abstract class LinkRule extends AbstractRule{
         super();
     }
 
-    protected boolean isExternalLink(String url){
-        try {
-        URI uri = new URI(url);
-        return uri.getScheme() != null &&
-               (uri.getScheme().equalsIgnoreCase("http") ||
-                uri.getScheme().equalsIgnoreCase("https"));
-        } 
-        catch (Exception e) {
-            return false;
-        }
+    protected boolean isRootRelativeLink(String url){
+        return url.startsWith("/");
     }
 
     protected boolean isAnchorLink(String url) {
@@ -78,13 +69,13 @@ public abstract class LinkRule extends AbstractRule{
     }
 
     protected boolean pathExists(String urlText) throws InvalidPathException {
-        Path madrPath = Paths.get(LintContext.USER_PATH);
+        Path madrPath = Paths.get(LintContext.INTERNAL_PATH);
         Path containingDir = madrPath.getParent();
         Path resolvedPath = containingDir.resolve(urlText).normalize();
         return Files.exists(resolvedPath);    
     }
 
-    protected void buildDescription(String linkType, HashMap<String, Integer> brokenLinks, StringBuilder description){
+    protected void buildDescription(String linkType, Map<String, Integer> brokenLinks, StringBuilder description){
         if (brokenLinks.isEmpty()){
             return;
         }
