@@ -14,7 +14,7 @@ import neutra1.linter.rules.SectionRule;
 public class Rule03 extends SectionRule implements IAtomicRule {
 
     private final String RULE_ID_A = "MADR03a";
-    private final String RULE_ID_B = "MADR04b";
+    private final String RULE_ID_B = "MADR03b";
 
     public Rule03(){super();}
 
