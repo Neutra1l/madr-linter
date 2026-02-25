@@ -11,6 +11,7 @@ import java.util.Set;
 
 import neutra1.linter.core.ASTTraverser;
 import neutra1.linter.core.Reporter;
+import neutra1.linter.helper.LintContext;
 import neutra1.linter.rules.AbstractRule;
 import neutra1.linter.rules.IAtomicRule;
 import neutra1.linter.rules.impl.atomic.Rule01;
@@ -57,11 +58,16 @@ public class Main implements Runnable {
     boolean quietMode;
     @Option(names = {"-n", "--no-warn"}, description = "Disable warnings for certain rules. They can either be declared separately(e.g -n1 -n2) or chained together separated by comma(e.g -n1,2)", split = ",")
     private Set<Integer> disabledRules = new HashSet<>();
-
+    @Option(names = {"-r", "--root"}, description = "Set the root directory of the project. Defaults to current working directory if not specified.")
+    private String root;
     @Override
     public void run() {
         String internalPath = currentDir.resolve(userPath).toString();
-        ASTTraverser astTraverser = ASTTraverser.getASTTTraverserInstance(userPath, internalPath);
+        LintContext.WORKING_DIR = currentDir.toString();
+        LintContext.INTERNAL_PATH = internalPath;
+        LintContext.USER_PATH = userPath;
+        LintContext.PROJECT_ROOT = (root == null) ? currentDir.toString() : currentDir.resolve(Paths.get(root)).toString();
+        ASTTraverser astTraverser = ASTTraverser.getASTTraverserInstance();
         Reporter reporter = Reporter.getReporterInstance();
         List<AbstractRule> rules = List.of(
             new Rule01(),

@@ -45,8 +45,6 @@ public class ASTTraverser {
     private NodeVisitor visitor;
     private static ASTTraverser astTraverser = null;
     private Node document;
-    private String userPath;
-    private String internalPath;
 
     private ASTTraverser() {
         this.output = new ArrayList<>();
@@ -67,30 +65,11 @@ public class ASTTraverser {
             new VisitHandler<>(Image.class, this::visitImage)
         );
     }
-
-    private ASTTraverser(String madrPath, String internalPath) {
-        this();
-        this.userPath = madrPath;
-        this.internalPath = internalPath;
-    }
-
     public static ASTTraverser getASTTraverserInstance() {
         if (astTraverser == null) {
             astTraverser = new ASTTraverser();
         }
         return astTraverser;
-    }
-
-    public static ASTTraverser getASTTTraverserInstance(String userPath, String internalPath){
-        if (astTraverser == null) {
-            astTraverser = new ASTTraverser(userPath, internalPath);
-        }
-        else{
-            setUserPath(userPath);
-            setInternalPath(internalPath);
-        }
-        return astTraverser;
-        
     }
 
     public void traverse(String markdown) {
@@ -206,7 +185,7 @@ public class ASTTraverser {
     private void visitImage(Image image){
         String text = image.getText().toString();
         String url = image.getUrl().toString();
-        int startLineNumber = image.getStartLineNumber();
+        int startLineNumber = image.getStartLineNumber() + 1;
 
         imageInfoList.add(new ImageInfo(text, url, startLineNumber));
         visitor.visitChildren(image);
@@ -248,13 +227,6 @@ public class ASTTraverser {
             next = next.getNext();
         }
     return subheadings;
-}
-    private static void setUserPath(String madrPath) {
-        astTraverser.userPath = madrPath;
     }
 
-    private static void setInternalPath(String internalPath){
-        astTraverser.internalPath = internalPath;
-    
-    }
 }

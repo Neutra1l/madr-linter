@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import neutra1.linter.helper.LintContext;
 import neutra1.linter.models.records.Violation;
 
 public abstract class NamingRule extends AbstractRule{
@@ -24,13 +25,13 @@ public abstract class NamingRule extends AbstractRule{
         nonMarkdownFiles = new ArrayList<>();
         madrsWithNamingViolations = new ArrayList<>();
         validMadrNames = new ArrayList<>();
-        if (Files.isDirectory(Paths.get(traverser.getInternalPath()))){
+        if (Files.isDirectory(Paths.get(LintContext.INTERNAL_PATH))){
             classifyFilesInMadrFolder();
         }
     }
 
     private List<Path> getAllFilesInMadrFolder(){
-        String madrPath = traverser.getInternalPath();
+        String madrPath = LintContext.INTERNAL_PATH;
         Path parentFolder = Path.of(madrPath);
         DirectoryStream<Path> directoryStream = null;
         List<Path> paths = null;
@@ -39,7 +40,7 @@ public abstract class NamingRule extends AbstractRule{
             paths = new ArrayList<>();
             for (Path path : directoryStream){
                 Path fileName = path.getFileName();
-                Path pathName = Paths.get(traverser.getUserPath(), fileName.toString());
+                Path pathName = Paths.get(LintContext.USER_PATH, fileName.toString());
                 paths.add(pathName);
             }
         }

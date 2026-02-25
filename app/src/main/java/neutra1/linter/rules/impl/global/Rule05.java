@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import neutra1.linter.helper.LintContext;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.IGlobalRule;
 import neutra1.linter.rules.NamingRule;
@@ -38,7 +39,7 @@ public class Rule05 extends NamingRule implements IGlobalRule {
             String description = "Expected the smallest MADR Id in the folder to be either 0000 or 0001. Found " + formattedId;
             reporter.report(new Violation(RULE_ID_A, description, -1));
         }
-        Path madrFolder = Paths.get(traverser.getInternalPath());
+        Path madrFolder = Paths.get(LintContext.INTERNAL_PATH);
         List<DisconnectedMadrPair> disconnectedMadrPairList = new ArrayList<>();
         for (int i = 0; i < madrIds.size() - 1; i++){
             int diff = madrIds.get(i+1) - madrIds.get(i);

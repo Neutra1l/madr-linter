@@ -15,6 +15,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import neutra1.linter.helper.LintContext;
+
 public abstract class LinkRule extends AbstractRule{
 
     protected final String ruleType = "Link Rule";
@@ -76,7 +78,7 @@ public abstract class LinkRule extends AbstractRule{
     }
 
     protected boolean pathExists(String urlText) throws InvalidPathException {
-        Path madrPath = Paths.get(traverser.getUserPath());
+        Path madrPath = Paths.get(LintContext.USER_PATH);
         Path containingDir = madrPath.getParent();
         Path resolvedPath = containingDir.resolve(urlText).normalize();
         return Files.exists(resolvedPath);    
