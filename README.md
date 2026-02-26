@@ -30,37 +30,32 @@ Learn more about MADR [here](https://www.ozimmer.ch/practices/2022/11/22/MADRTem
 ## Rules
 ### Heading rules
 ```
-01. Mandatory sections: Title(a), Context and Problem Statement(b),
-    Considered Options(c), Decision Outcome(d) must be present.
-10. Sections Considered Alternatives and Decision Outcome must be immediate subsections of the title. 
-    Other optional sections must have heading level conforming to template.
-    Example: Decision Drivers must have level 2, Consequences level 3 etc.
-11. Sections Consequences and Confirmation, if present, must be direct subsections of Decision Outcome 
-07. No numbers allowed in headings.
-14. Decision Outcome Section must come before Pros and Cons section(if any).
+01. Mandatory sections: Title (a), Context and Problem Statement (b),
+    Considered Options (c), Decision Outcome (d) must be present.
+10. Heading levels of sections must conform to template´s
+11. Sections Consequences (a) and Confirmation (b), if present, must be direct subsections of Decision Outcome.
+07. Only the title is allowed to have heading level 1.
 ```
 
 ### Section rules
 ```
-02. No sections left empty.
-03. Per convention, chosen option is always mentioned first in decision outcome section.
+02. No sections may be empty.
+03. Chosen option should always be present (a) and mentioned first (b) in decision outcome section.
 04. Chosen alternative must be followed by rationale.
-13. Asterisks should be used as list marker, not hyphen (-).
+13. Asterisks (*) should be used as list marker.
 ```
 ### Naming rules
 ```
-05. The numberings of ADRs within the containing folder should be consecutive(i.e. no skips)
-     and start with either 0000 or 0001.
-06. Adherence to naming conventions for MADR (The format is as follows: xxxx-short-description-of-decision.md).
+05. The numberings of ADRs within the containing folder should start with either 0000 or 
+0001 (a) and feature no skips (b).
+06. MADRs should be contained in a directory dedicated to them.
 09. No collisions of numberings between MADRs in the same folder.
-15*. If the current directory is tracked by Git and has a remote in GitHub, 
-    requested changes within pull requests should not introduce new naming violations.
+15. Following naming scheme should be followed: xxxx-short-description-of-decision.md.
 ```
 ### Link rules
 ```
-08. Links must work (clickable and lead to an actual website or directory).
-14. Images must work (must be renderable by any Markdown renderer and 
-    if it is an image link, the link must work).
+08. External links must be valid and reachable.
+14. Local links (Anchor links, local paths to resources, etc) must be valid.
 ```
 ### Metadata rules
 ```
