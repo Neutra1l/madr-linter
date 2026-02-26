@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum DecisionOutcomeElements {
 
-    CHOSEN_OPTION(List.of("Chosen Option", "Chosen Alternative", "Selected", "Chosen", "We selected", "We chose", "We decided")),
+    CHOSEN_OPTION(List.of("Chosen Option", "Chosen Alternative", "Selected", "Chosen", "We selected", "We chose", "We decided", "We want", "We use", "We select", "We opt")),
     RATIONALE(List.of("Rationale", "Reasoning", "Reason", "Because", "Justification", "Motivation", "Motivated", "Due to"));
 
     private final List<String> keywords;
