@@ -39,6 +39,9 @@ public abstract class NamingRule extends AbstractRule{
             directoryStream = Files.newDirectoryStream(parentFolder);
             paths = new ArrayList<>();
             for (Path path : directoryStream){
+                if(Files.isDirectory(path)){
+                    continue;
+                }
                 Path fileName = path.getFileName();
                 Path pathName = Paths.get(LintContext.USER_PATH, fileName.toString());
                 paths.add(pathName);
