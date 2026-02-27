@@ -1,8 +1,16 @@
 package neutra1.linter.rules.impl.atomic;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 import neutra1.linter.models.enums.LinkType;
 import neutra1.linter.models.records.LinkInfo;
@@ -28,21 +36,37 @@ public class Rule08 extends LinkRule implements IAtomicRule {
     @Override
     public void check(){
         List<LinkInfo> externalLinkList = traverser.getLinkInfoList().stream().
-                                        filter(linkInfo -> linkInfo.linkType() == LinkType.EXTERNAL)
-                                        .toList();
-        for (LinkInfo link : externalLinkList){
+            filter(linkInfo -> linkInfo.linkType() == LinkType.EXTERNAL).toList();
+        final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
+            .executor(Executors.newVirtualThreadPerTaskExecutor()).connectTimeout(Duration.ofSeconds(3)).build();
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (LinkInfo link : externalLinkList) {
             String urlText = link.url();
             int lineNumber = link.startLineNumber();
-            try {
-                int status = establishHeadConnection(urlText);
-                if (status < 200 || status > 400 && status != 403 && status != 429){
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlText))
+                // Pretend to be a human on a Firefox browser sending this request on a Windows machine
+                // See here: https://www.useragentstring.com/pages/Firefox/
+                // and here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/User-Agent
+                // in case you forget wtf this is
+                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0")
+                .timeout(Duration.ofSeconds(3))
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .build();
+            CompletableFuture<Void> future = client.sendAsync(request, HttpResponse.BodyHandlers.discarding()).
+                thenAccept(response ->  {
+                    int status = response.statusCode();
+                    if (status < 200 || status > 400 && status != 403 && status != 429) {
+                        invalidExternalLinks.put(urlText, lineNumber);
+                    }   
+                }).
+                exceptionally(ex -> {
                     invalidExternalLinks.put(urlText, lineNumber);
-                }
-            }
-            catch (Exception e){
-                invalidExternalLinks.put(urlText, lineNumber);
-            }
+                    return null;
+                });
+            futures.add(future);
         }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         if (!invalidExternalLinks.isEmpty()){
             StringBuilder description = new StringBuilder("Non-reachable external links detected:\n");
             invalidExternalLinks.entrySet().stream().sorted(Map.Entry.comparingByValue())

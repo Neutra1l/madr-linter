@@ -62,7 +62,8 @@ public class Main implements Runnable {
     @Option(names = {"-r", "--root"}, description = "Set the root directory of the project. Defaults to current working directory if not specified.")
     private String root;
     @Override
-    public void run() {
+    public void run(){ 
+        System.setProperty("jdk.httpclient.maxstreams", "200");
         String internalPath = currentDir.resolve(userPath).toString();
         LintContext.WORKING_DIR = currentDir.toString();
         LintContext.INTERNAL_PATH = internalPath;
