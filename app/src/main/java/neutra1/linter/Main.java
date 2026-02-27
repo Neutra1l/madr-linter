@@ -11,6 +11,7 @@ import java.util.Set;
 
 import neutra1.linter.core.ASTTraverser;
 import neutra1.linter.core.Reporter;
+import neutra1.linter.helper.IgnoreFileHandler;
 import neutra1.linter.helper.LintContext;
 import neutra1.linter.rules.AbstractRule;
 import neutra1.linter.rules.IAtomicRule;
@@ -67,6 +68,7 @@ public class Main implements Runnable {
         LintContext.INTERNAL_PATH = internalPath;
         LintContext.USER_PATH = userPath;
         LintContext.PROJECT_ROOT = (root == null) ? currentDir.toString() : currentDir.resolve(Paths.get(root)).toString();
+        IgnoreFileHandler ignoreFileHandler = LintContext.getIgnoreFileHandler();
         ASTTraverser astTraverser = ASTTraverser.getASTTraverserInstance();
         Reporter reporter = Reporter.getReporterInstance();
         List<AbstractRule> rules = List.of(
@@ -88,6 +90,10 @@ public class Main implements Runnable {
         );
         System.out.println("INFO: Linting on " + userPath + "...\n");
         if (Files.isRegularFile(Paths.get(internalPath))){
+            if (ignoreFileHandler.isIgnored(internalPath)){
+                System.out.println(userPath +" was not linted due to its presence inside .madrlintignore.");
+                System.exit(0);
+            }
             try {
                 astTraverser.traverse(readFile(internalPath));
                 rules = rules.stream().filter(rule -> rule instanceof IAtomicRule).toList();

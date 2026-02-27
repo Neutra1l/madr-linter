@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import neutra1.linter.helper.IgnoreFileHandler;
 import neutra1.linter.helper.LintContext;
 import neutra1.linter.models.records.Violation;
 
 public abstract class NamingRule extends AbstractRule{
     
     protected final String ruleType = "Naming Rule";
+    protected IgnoreFileHandler ignoreFileHandler;
     private final String MADR_FILE_NAMING_REGEX = "^\\d{4}-.+\\.md$";
     protected List<String> nonMarkdownFiles;
     protected List<String> madrsWithNamingViolations;
@@ -22,6 +24,7 @@ public abstract class NamingRule extends AbstractRule{
     
     public NamingRule(){
         super();
+        ignoreFileHandler = LintContext.getIgnoreFileHandler();
         nonMarkdownFiles = new ArrayList<>();
         madrsWithNamingViolations = new ArrayList<>();
         validMadrNames = new ArrayList<>();
@@ -70,6 +73,9 @@ public abstract class NamingRule extends AbstractRule{
         }
         Pattern pattern = Pattern.compile(MADR_FILE_NAMING_REGEX);
         for (Path filePath : paths) {
+            if (ignoreFileHandler.isIgnored(filePath)){
+                continue;
+            }
             String fileName = filePath.getFileName().toString();
             String path = filePath.toString();
             if (!fileName.contains(".md")) {
