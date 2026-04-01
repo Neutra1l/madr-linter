@@ -20,6 +20,7 @@ public enum MandatorySection {
     }
 
     public boolean matches(String title) {
-        return permittedTitles.contains(title);
+        List<String> permittedTitlesLowerCase = permittedTitles.stream().map(name -> name.toLowerCase()).toList();
+        return permittedTitlesLowerCase.contains(title.toLowerCase());
     }
 }

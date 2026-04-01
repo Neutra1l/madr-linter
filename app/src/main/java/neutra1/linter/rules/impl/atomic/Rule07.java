@@ -23,7 +23,7 @@ public class Rule07 extends HeadingRule implements IAtomicRule {
     @Override
     public void check(){
         List<HeadingInfo> headingList = traverser.getHeadingInfoList();
-        int headingLevelOneCount =(int)headingList.stream().filter(headingInfo -> headingInfo.level() == 1).count();
+        int headingLevelOneCount = (int) headingList.stream().filter(headingInfo -> headingInfo.level() == 1).count();
         if (headingLevelOneCount > 1){
             StringBuilder desc = new StringBuilder("Expected one heading with heading level 1 (The title). " + headingLevelOneCount + " however were found:\n");
             List<HeadingInfo> headingsLevelOne = headingList.stream().filter(headingInfo -> headingInfo.level() == 1).toList();
