@@ -23,13 +23,13 @@ public class Rule11 extends HeadingRule implements IAtomicRule {
 
     @Override
     public void check(){
-        HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles(), false);
+        HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles(), true);
         if (decisionOutcome == null){
             return;
         }
         String subsequenceDecisionOutcome = decisionOutcome.getBodyUnderHeading(true);
-        HeadingInfo consequences = getHeadingInfoByText(OptionalSection.CONSEQUENCES.getPermittedTitles(), false);
-        HeadingInfo confirmation = getHeadingInfoByText(OptionalSection.CONFIRMATION.getPermittedTitles(), false);
+        HeadingInfo consequences = getHeadingInfoByText(OptionalSection.CONSEQUENCES.getPermittedTitles(), true);
+        HeadingInfo confirmation = getHeadingInfoByText(OptionalSection.CONFIRMATION.getPermittedTitles(), true);
         reportFalseParenthood(RULE_ID_A, subsequenceDecisionOutcome, consequences);
         reportFalseParenthood(RULE_ID_B, subsequenceDecisionOutcome, confirmation);
     }
