@@ -76,14 +76,14 @@ public class ASTTraverser {
         MutableDataSet options = new MutableDataSet();
         options.set(Parser.TRACK_DOCUMENT_LINES, true);
         options.set(HtmlRenderer.GENERATE_HEADER_ID, true);
-        options.set(Parser.EXTENSIONS, List.of(YamlFrontMatterExtension.create()));
+        options.set(Parser.EXTENSIONS, List.of(YamlFrontMatterExtension.create(), HtmlCommentRemoverExtension.create()));
         Parser parser = Parser.builder(options).build();
         this.document = parser.parse(markdown);
         visitor.visit(this.document);
     }
 
     private void visitHeading(Heading heading) {
-        String text = heading.getText().toString();
+        String text = getAstTabText(heading);
         String rawText = heading.getChars().toString();
         String anchorRefId = heading.getAnchorRefId();
         int level = heading.getLevel();
@@ -93,7 +93,7 @@ public class ASTTraverser {
         int startLineNumber = heading.getStartLineNumber() + 1;
         Map<String, List<Node>> subHeadingBodyMap = new HashMap<>();
         for (Heading subHeading : subHeadings){
-            String subText = subHeading.getText().toString();
+            String subText = getAstTabText(subHeading);
             List<Node> subBody = buildBody(subHeading, false);
             subHeadingBodyMap.put(subText, subBody);
         }
@@ -213,6 +213,14 @@ public class ASTTraverser {
             current = current.getNext();
         }
         return bodyNodes;
+    }
+
+    private String getAstTabText(Node node){
+        StringBuilder sb = new StringBuilder();
+        for (Node child : node.getChildren()) {
+            sb.append(child.getChars());
+        }
+        return sb.toString().trim();
     }
 
     private List<Heading> getSubheadings(Heading parentHeading) {
