@@ -35,6 +35,7 @@ dependencies {
     implementation("com.vladsch.flexmark:flexmark-ext-yaml-front-matter:0.64.8")
     //YAML linter
     implementation("com.github.sbaudoin:yamllint:1.6.1")
+    implementation("com.google.code.gson:gson:2.13.2")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -53,6 +54,7 @@ graalvmNative{
     binaries {
         named("main") {
             buildArgs("--enable-http", "--enable-https")
+            imageName.set("madrlint")
         }
     }
 }

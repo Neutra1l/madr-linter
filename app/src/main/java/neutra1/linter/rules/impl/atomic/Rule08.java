@@ -1,18 +1,20 @@
 package neutra1.linter.rules.impl.atomic;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
-import neutra1.linter.models.enums.LinkType;
+import com.google.gson.Gson;
 import neutra1.linter.models.records.LinkInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.IAtomicRule;
@@ -21,11 +23,10 @@ import neutra1.linter.rules.LinkRule;
 public class Rule08 extends LinkRule implements IAtomicRule {
 
     private final String RULE_ID = "MADR08"; 
-    private HashMap<String, Integer> invalidExternalLinks;
+    
 
     public Rule08() {
         super();
-        invalidExternalLinks = new HashMap<>();
     }
 
     @Override
@@ -35,43 +36,80 @@ public class Rule08 extends LinkRule implements IAtomicRule {
 
     @Override
     public void check(){
-        List<LinkInfo> externalLinkList = traverser.getLinkInfoList().stream().
-            filter(linkInfo -> linkInfo.linkType() == LinkType.EXTERNAL).toList();
-        final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
-            .executor(Executors.newVirtualThreadPerTaskExecutor()).connectTimeout(Duration.ofSeconds(3)).build();
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
-
-        for (LinkInfo link : externalLinkList) {
-            String urlText = link.url();
-            int lineNumber = link.startLineNumber();
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlText))
-                // Pretend to be a human on a Firefox browser sending this request on a Windows machine
-                // See here: https://www.useragentstring.com/pages/Firefox/
-                // and here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/User-Agent
-                // in case you forget wtf this is
-                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0")
-                .timeout(Duration.ofSeconds(3))
-                .method("HEAD", HttpRequest.BodyPublishers.noBody())
-                .build();
-            CompletableFuture<Void> future = client.sendAsync(request, HttpResponse.BodyHandlers.discarding()).
-                thenAccept(response ->  {
-                    int status = response.statusCode();
-                    if (status < 200 || status > 400 && status != 403 && status != 429) {
-                        invalidExternalLinks.put(urlText, lineNumber);
-                    }   
-                }).
-                exceptionally(ex -> {
-                    invalidExternalLinks.put(urlText, lineNumber);
-                    return null;
-                });
-            futures.add(future);
+        File lychee = null;
+        try {
+            lychee = extractBinary("lychee.exe");
+        } catch (Exception e) {
+            System.out.println("lychee executable not found. Checks for Rule 08 will not run");
+            return;
         }
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        if (!invalidExternalLinks.isEmpty()){
-            StringBuilder description = new StringBuilder("Non-reachable external links detected:\n");
-            invalidExternalLinks.entrySet().stream().sorted(Map.Entry.comparingByValue())
-            .forEach(entry -> description.append(LISTING_INDENT_SHORT + "Line " + entry.getValue() + ": " + entry.getKey() + "\n"));
-            reporter.report(new Violation(RULE_ID, description.toString(), -1));
+        List<LinkInfo> externalLinkList = traverser.getLinkInfoList();
+        if (externalLinkList.isEmpty()) return;
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                lychee.getAbsolutePath(),
+                "-f", "json",
+                "-qq",
+                "-" 
+            );
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8))) {
+                for (LinkInfo link : externalLinkList) {
+                    writer.write(link.url());
+                    writer.newLine();
+                }
+                writer.flush();
+            } 
+            StringBuilder lycheeOutputSb = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lycheeOutputSb.append(line);
+                }
+            }
+            int exitCode = process.waitFor();
+            if (lycheeOutputSb.isEmpty()) {
+                System.out.println("Lychee returned no output. Exit code: " + exitCode);
+                return;
+            }
+            Gson gson = new Gson();
+            String lycheeOutput = lycheeOutputSb.toString();
+            FailedLinkReport failedLinkReport = gson.fromJson(lycheeOutput.substring(lycheeOutput.indexOf("{")), FailedLinkReport.class);
+            if (failedLinkReport != null && !failedLinkReport.error_map.isEmpty()) {
+                List<String> failedUrls = new ArrayList<>();
+                for (Map.Entry<String, List<FailedLink>> entry : failedLinkReport.error_map.entrySet()) {
+                    List<String> errors = entry.getValue().stream().map(error -> error.url()).toList();
+                    failedUrls.addAll(errors);
+                }
+                List<LinkInfo> failedLinkInfos = externalLinkList.stream().filter(linkInfo -> failedUrls.contains(linkInfo.url())).toList();
+                StringBuilder desc = new StringBuilder("Non reachable external links detected:\n");
+                failedLinkInfos.stream().forEach(failedLinkInfo -> desc.append(DESCRIPTION_INDENT_SHORT + "Line " + failedLinkInfo.startLineNumber() + ": " + failedLinkInfo.url() + "\n"));
+                reporter.report(new Violation(RULE_ID, desc.toString(), -1));
+            }
+
+        } catch (IOException e) {
+            System.out.println("IO Error: " + e.getMessage());
+        } catch (InterruptedException e) {
+            System.out.println("Process interrupted");
         }
     }
+
+    private File extractBinary(String binaryName) throws IOException{
+        InputStream inputStream = Rule08.class.getResourceAsStream("/" + binaryName);
+        if (inputStream == null){
+            System.out.println("Executable not found in Resources.");
+            throw new IOException();
+        }
+        File temp = File.createTempFile(binaryName, null);
+        temp.deleteOnExit();
+        Files.copy(inputStream, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        temp.setExecutable(true);
+        return temp;
+    }
+
+    private record FailedLink(String url){}
+
+    private record FailedLinkReport (Map<String, List<FailedLink>> error_map){}
 }
