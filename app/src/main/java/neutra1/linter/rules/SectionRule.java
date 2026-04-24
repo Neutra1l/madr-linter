@@ -31,8 +31,8 @@ public abstract class SectionRule extends AbstractRule {
     protected HeadingInfo getHeadingInfoByText(List<String> targetHeadingTexts) {
         for (String targetHeadingText : targetHeadingTexts){
             for (HeadingInfo headingInfo : traverser.getHeadingInfoList()){
-                String text = headingInfo.text();
-                if (text.equals(targetHeadingText)){
+                String text = headingInfo.text().toLowerCase();
+                if (text.equals(targetHeadingText.toLowerCase())){
                     return headingInfo;
                 }
             }

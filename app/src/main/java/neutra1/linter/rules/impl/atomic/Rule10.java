@@ -24,14 +24,14 @@ public class Rule10 extends HeadingRule implements IAtomicRule {
 
     @Override
     public void check(){
-        HeadingInfo context = getHeadingInfoByText(MandatorySection.CONTEXT.getPermittedTitles(), false);
-        HeadingInfo consideredOptions = getHeadingInfoByText(MandatorySection.CONSIDERED_OPTIONS.getPermittedTitles(), false);
-        HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles(), false);
-        HeadingInfo prosAndCons = getHeadingInfoByText(OptionalSection.PROS_AND_CONS.getPermittedTitles(), false);
-        HeadingInfo moreInformation = getHeadingInfoByText(OptionalSection.MORE_INFORMATION.getPermittedTitles(), false);
-        HeadingInfo decisionDrivers = getHeadingInfoByText(OptionalSection.DECISION_DRIVERS.getPermittedTitles(), false);
-        HeadingInfo consequences = getHeadingInfoByText(OptionalSection.CONSEQUENCES.getPermittedTitles(), false);
-        HeadingInfo confirmation = getHeadingInfoByText(OptionalSection.CONFIRMATION.getPermittedTitles(), false);
+        HeadingInfo context = getHeadingInfoByText(MandatorySection.CONTEXT.getPermittedTitles(), true);
+        HeadingInfo consideredOptions = getHeadingInfoByText(MandatorySection.CONSIDERED_OPTIONS.getPermittedTitles(), true);
+        HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles(), true);
+        HeadingInfo prosAndCons = getHeadingInfoByText(OptionalSection.PROS_AND_CONS.getPermittedTitles(), true);
+        HeadingInfo moreInformation = getHeadingInfoByText(OptionalSection.MORE_INFORMATION.getPermittedTitles(), true);
+        HeadingInfo decisionDrivers = getHeadingInfoByText(OptionalSection.DECISION_DRIVERS.getPermittedTitles(), true);
+        HeadingInfo consequences = getHeadingInfoByText(OptionalSection.CONSEQUENCES.getPermittedTitles(), true);
+        HeadingInfo confirmation = getHeadingInfoByText(OptionalSection.CONFIRMATION.getPermittedTitles(), true);
 
         StringBuilder description = new StringBuilder();
         description = reportBadHeadingLevel(context, description, this.indentNeeded, MandatorySection.CONTEXT.getPermittedHeadingLevel());

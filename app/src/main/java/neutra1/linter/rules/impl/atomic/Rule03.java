@@ -40,7 +40,7 @@ public class Rule03 extends SectionRule implements IAtomicRule {
         String firstNodeText = firstNodeDecisionOutcome.getChars().toString();
         List<String> firstNodeLines = List.of(firstNodeText.split("\n"));
         String firstLine = firstNodeLines.get(0);
-        if (!DecisionOutcomeElements.CHOSEN_OPTION.matches(firstLine)) {
+        if (!DecisionOutcomeElements.CHOSEN_OPTION.matches(firstLine, true)) {
             String description = "Per convention, Chosen Option is always mentioned first in Decision Outcome section.\n";
             int lineNumber = getLineNumberByContent(decisionOutcome,
                 DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
