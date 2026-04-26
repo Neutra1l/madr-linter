@@ -18,7 +18,7 @@ public class Rule15 extends NamingRule implements IDirectoryRule {
     }
 
     private void reportMadrsWithNamingViolations(){
-        String openingMessage = "The following MADR files do not follow the MADR file naming conventions (XXXX-decision-taken.md, where X is a digit from 0-9):\n";
+        String openingMessage = "Invalid filename. Expected format: 'XXXX-brief-description.md'";
         this.report(madrsWithNamingViolations, RULE_ID, openingMessage);
     }
 }

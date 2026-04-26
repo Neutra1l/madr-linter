@@ -19,6 +19,8 @@ public class Rule14 extends LinkRule implements IFileRule {
 
     private final String RULE_ID_A = "MADR14a";
     private final String RULE_ID_B = "MADR14b";
+    private final String RULE_ID_C = "MADR14c";
+    private final String RULE_ID_D = "MADR14d";
 
     public Rule14(){
         super();
@@ -36,7 +38,7 @@ public class Rule14 extends LinkRule implements IFileRule {
         Map<String, Integer> badAnchorLinks = new HashMap<>();
         Map<String, Integer> badRootRelativePaths = new HashMap<>();
         List<LinkInfo> localLinks = traverser.getLinkInfoList().stream().filter(linkInfo -> linkInfo.linkType() == LinkType.LOCAL).toList();
-        for (LinkInfo localLink : localLinks){
+        for (LinkInfo localLink : localLinks) {
             String url = localLink.url();
             int startLineNumber = localLink.startLineNumber();
             if (isAbsolutePath(url)){
@@ -69,17 +71,19 @@ public class Rule14 extends LinkRule implements IFileRule {
                 }
             }
         }
-        StringBuilder descA = new StringBuilder("Invalid path links detected:\n");
-        buildDescription("System relative paths:\n", badLocalPaths, descA);
-        buildDescription("Anchor links:\n", badAnchorLinks, descA);
-        buildDescription("Root relative paths:\n", badRootRelativePaths, descA);
-        if (!descA.toString().equals("Invalid path links detected:\n")){
-            reporter.report(new Violation(RULE_ID_A, descA.toString(), -1));
-        }
-        if (!absolutePaths.isEmpty()){
-            StringBuilder descB = new StringBuilder("System absolute paths are non-renderable:\n");
-            buildDescription("", absolutePaths, descB);
-            reporter.report(new Violation(RULE_ID_B, descB.toString(), -1));
-        }
+        buildDescription("Invalid local path detected: ", badLocalPaths, RULE_ID_A);
+        buildDescription("Invalid anchor link detected: ", badAnchorLinks, RULE_ID_B);
+        buildDescription("Invalid root relative path detected: ", badRootRelativePaths, RULE_ID_C);
+        buildDescription("Non-renderable absolute path detected:", badRootRelativePaths, RULE_ID_D);    
     } 
+
+    private void buildDescription(String foreword, Map<String, Integer> brokenLinks, String ruleId){
+        if (brokenLinks.isEmpty()){
+            return;
+        }
+        brokenLinks.forEach((url, lineNumber) -> {
+            String desc = foreword + url;
+            reporter.report(new Violation(ruleId, desc, lineNumber));
+        });
+    }
 }

@@ -84,11 +84,12 @@ public class Rule08 extends LinkRule implements IFileRule {
                     failedUrls.addAll(errors);
                 }
                 List<LinkInfo> failedLinkInfos = externalLinkList.stream().filter(linkInfo -> failedUrls.contains(linkInfo.url())).toList();
-                StringBuilder desc = new StringBuilder("Non reachable external links detected:\n");
-                failedLinkInfos.stream().forEach(failedLinkInfo -> desc.append(DESCRIPTION_INDENT_SHORT + "Line " + failedLinkInfo.startLineNumber() + ": " + failedLinkInfo.url() + "\n"));
-                reporter.report(new Violation(RULE_ID, desc.toString(), -1));
+                failedLinkInfos.stream().forEach(link -> {
+                    int lineNumber = link.startLineNumber();
+                    StringBuilder desc = new StringBuilder("Non-reachable link detected: " + link.url());
+                    reporter.report(new Violation(RULE_ID, desc.toString(), lineNumber));
+                });
             }
-
         } catch (IOException e) {
             System.out.println("IO Error: " + e.getMessage());
         } catch (InterruptedException e) {

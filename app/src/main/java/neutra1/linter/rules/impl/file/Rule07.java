@@ -1,5 +1,6 @@
 package neutra1.linter.rules.impl.file;
 
+import java.util.Comparator;
 import java.util.List;
 
 import neutra1.linter.models.records.HeadingInfo;
@@ -25,13 +26,14 @@ public class Rule07 extends HeadingRule implements IFileRule {
         List<HeadingInfo> headingList = traverser.getHeadingInfoList();
         int headingLevelOneCount = (int) headingList.stream().filter(headingInfo -> headingInfo.level() == 1).count();
         if (headingLevelOneCount > 1){
-            StringBuilder desc = new StringBuilder("Expected one heading with heading level 1 (The title). " + headingLevelOneCount + " however were found:\n");
             List<HeadingInfo> headingsLevelOne = headingList.stream().filter(headingInfo -> headingInfo.level() == 1).toList();
-            for (HeadingInfo headingLevelOne : headingsLevelOne){
-                desc.append(LISTING_INDENT_SHORT);
-                desc.append("Line " + headingLevelOne.startLineNumber() + ": " + headingLevelOne.text() + "\n");
+            headingsLevelOne.sort(Comparator.comparingInt(HeadingInfo::startLineNumber));
+            List<HeadingInfo> violatingHeadings = headingsLevelOne.subList(1, headingsLevelOne.size());
+            for (HeadingInfo heading : violatingHeadings){
+                int startLineNumber = heading.startLineNumber();
+                StringBuilder desc = new StringBuilder("Unexpected H1 heading: " + heading.text());
+                reporter.report(new Violation(RULE_ID, desc.toString(), startLineNumber));      
             }
-            reporter.report(new Violation(RULE_ID, desc.toString(), -1));   
         }
     }
 }

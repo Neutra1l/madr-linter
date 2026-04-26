@@ -33,18 +33,15 @@ public class Rule12 extends MetadataRule implements IFileRule {
         if (problems.size() == 0){
             return;
         }
-        StringBuilder descriptionBuilder = new StringBuilder("Metadata section has issues that may either prevent " + 
-                                                            "it from being rendered properly by most parsers\n" + 
-                                                            DESCRIPTION_INDENT_SHORT + 
-                                                            "or do not conform to YAML conventions: \n");
         for (int i = 0; i < problems.size(); i++){
+            StringBuilder descBuilder = new StringBuilder();
             String current = problems.get(i).toString();
             String[] parts = current.split(":", 3);
             int line = Integer.parseInt(parts[0]) + startLineNumber;
             String desc = capitalize(parts[2]);
-            descriptionBuilder.append(LISTING_INDENT_SHORT + "Line " + line + ": " + desc + "\n");
+            descBuilder.append("YAML front matter: " + desc);
+            reporter.report(new Violation(RULE_ID, descBuilder.toString(), line));
         }
-        reporter.report(new Violation(RULE_ID, descriptionBuilder.toString(), -1));
     }
 
     private String capitalize(String s) {

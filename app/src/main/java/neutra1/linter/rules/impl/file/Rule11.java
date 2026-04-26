@@ -42,10 +42,10 @@ public class Rule11 extends HeadingRule implements IFileRule {
         if (!parentText.contains(rawTextChildHeading)){
             String description;
             if (ruleId.equals(this.RULE_ID_A)){
-                description = "Per conventions, Consequences should be subsection of Decision Outcome.\n";
+                description = "Expected Consequences to be a H3 heading under Decision Outcome";
             }
             else {
-                description = "Per conventions, Confirmation should be subsection of Decision Outcome.\n";
+                description = "Expected Confirmation to be a H3 heading under Decision Outcome";
             }
             reporter.report(new Violation(ruleId, description, childHeading.startLineNumber()));
         }  

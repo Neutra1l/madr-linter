@@ -22,8 +22,7 @@ public class Rule06 extends NamingRule implements IDirectoryRule {
     }
 
     private void reportNonMarkdownFiles(){
-        StringBuilder openingMessage = new StringBuilder("MADR documents should be contained in a directory dedicated to them.\n");
-        openingMessage.append(DESCRIPTION_INDENT_SHORT).append("The following non-Markdown files were found in the MADR directory:\n");
+        StringBuilder openingMessage = new StringBuilder("Non-MADR found inside ADR directory");
         this.report(nonMarkdownFiles, RULE_ID, openingMessage.toString());
     }
 }

@@ -10,11 +10,9 @@ import neutra1.linter.rules.IFileRule;
 public class Rule10 extends HeadingRule implements IFileRule {
 
     private final String RULE_ID = "MADR10";
-    private boolean indentNeeded;
 
     public Rule10(){
         super();
-        indentNeeded = false;
     }
 
     @Override
@@ -33,33 +31,26 @@ public class Rule10 extends HeadingRule implements IFileRule {
         HeadingInfo consequences = getHeadingInfoByText(OptionalSection.CONSEQUENCES.getPermittedTitles(), true);
         HeadingInfo confirmation = getHeadingInfoByText(OptionalSection.CONFIRMATION.getPermittedTitles(), true);
 
-        StringBuilder description = new StringBuilder();
-        description = reportBadHeadingLevel(context, description, this.indentNeeded, MandatorySection.CONTEXT.getPermittedHeadingLevel());
-        description = reportBadHeadingLevel(consideredOptions, description, this.indentNeeded, MandatorySection.CONSIDERED_OPTIONS.getPermittedHeadingLevel());
-        description = reportBadHeadingLevel(decisionOutcome, description, this.indentNeeded, MandatorySection.DECISION_OUTCOME.getPermittedHeadingLevel());
-        description = reportBadHeadingLevel(prosAndCons, description, this.indentNeeded, OptionalSection.PROS_AND_CONS.getPermittedHeadingLevel());
-        description = reportBadHeadingLevel(moreInformation, description, this.indentNeeded, OptionalSection.MORE_INFORMATION.getPermittedHeadingLevel());
-        description = reportBadHeadingLevel(decisionDrivers, description, this.indentNeeded, OptionalSection.DECISION_DRIVERS.getPermittedHeadingLevel());
-        description = reportBadHeadingLevel(consequences, description, this.indentNeeded, OptionalSection.CONSEQUENCES.getPermittedHeadingLevel());
-        description = reportBadHeadingLevel(confirmation, description, this.indentNeeded, OptionalSection.CONFIRMATION.getPermittedHeadingLevel());
-
-        if (description.toString().length() > 0){
-            reporter.report(new Violation(RULE_ID, description.append("\n").toString(), -1));
-        }
+        reportBadHeadingLevel(context, MandatorySection.CONTEXT.getPermittedHeadingLevel());
+        reportBadHeadingLevel(consideredOptions, MandatorySection.CONSIDERED_OPTIONS.getPermittedHeadingLevel());
+        reportBadHeadingLevel(decisionOutcome, MandatorySection.DECISION_OUTCOME.getPermittedHeadingLevel());
+        reportBadHeadingLevel(prosAndCons, OptionalSection.PROS_AND_CONS.getPermittedHeadingLevel());
+        reportBadHeadingLevel(moreInformation, OptionalSection.MORE_INFORMATION.getPermittedHeadingLevel());
+        reportBadHeadingLevel(decisionDrivers, OptionalSection.DECISION_DRIVERS.getPermittedHeadingLevel());
+        reportBadHeadingLevel(consequences, OptionalSection.CONSEQUENCES.getPermittedHeadingLevel());
+        reportBadHeadingLevel(confirmation, OptionalSection.CONFIRMATION.getPermittedHeadingLevel());
     }
 
-    private StringBuilder reportBadHeadingLevel(HeadingInfo headingInfo, StringBuilder stringBuilder, boolean indentNeeded, int permittedHeadingLevel){
+    private void reportBadHeadingLevel(HeadingInfo headingInfo, int permittedHeadingLevel){
         if (headingInfo == null){
-            return stringBuilder;
+            return;
         }
         int actualLevel = headingInfo.level();
         if (actualLevel != permittedHeadingLevel){
-            this.indentNeeded = true;
-            if (indentNeeded){
-                stringBuilder.append("\n" + DESCRIPTION_INDENT_SHORT);
-            }
-            stringBuilder.append(headingInfo.text() + " should have heading level " + permittedHeadingLevel + " per convention. Actual heading level found: " + actualLevel);
+            String heading = headingInfo.text();
+            StringBuilder desc = new StringBuilder();
+            desc.append("Expected level " + permittedHeadingLevel + " for heading " + heading + ". Actual heading level found: " + actualLevel);
+            reporter.report(new Violation(RULE_ID, desc.toString(), headingInfo.startLineNumber()));
         }
-        return stringBuilder;
     }
 }
