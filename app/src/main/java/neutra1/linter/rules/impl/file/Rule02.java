@@ -50,8 +50,8 @@ public class Rule02 extends SectionRule implements IFileRule {
             });
         }
         if (!emptyBodyHeadings.isEmpty()) {
-            StringBuilder desc = new StringBuilder();
             emptyBodyHeadings.forEach(headingInfo -> {
+                StringBuilder desc = new StringBuilder();
                 String heading = headingInfo.text();
                 int lineNumber = headingInfo.startLineNumber();
                 desc.append("Empty section detected: " + heading);
