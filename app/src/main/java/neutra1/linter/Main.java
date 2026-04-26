@@ -89,7 +89,7 @@ public class Main implements Runnable {
             new Rule14(),
             new Rule15()
         );
-        System.out.println("INFO: Linting on " + userPath + "...\n");
+        
         if (Files.isRegularFile(Paths.get(internalPath))){
             if (ignoreFileHandler.isIgnored(internalPath)){
                 System.out.println(userPath +" was not linted due to its presence inside .madrlintignore.");
