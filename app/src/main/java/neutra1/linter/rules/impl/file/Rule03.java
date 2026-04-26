@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl.atomic;
+package neutra1.linter.rules.impl.file;
 
 import java.util.List;
 
@@ -8,10 +8,10 @@ import neutra1.linter.models.enums.DecisionOutcomeElements;
 import neutra1.linter.models.enums.MandatorySection;
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
-import neutra1.linter.rules.IAtomicRule;
+import neutra1.linter.rules.IFileRule;
 import neutra1.linter.rules.SectionRule;
 
-public class Rule03 extends SectionRule implements IAtomicRule {
+public class Rule03 extends SectionRule implements IFileRule {
 
     private final String RULE_ID_A = "MADR03a";
     private final String RULE_ID_B = "MADR03b";
@@ -40,7 +40,7 @@ public class Rule03 extends SectionRule implements IAtomicRule {
         String firstNodeText = firstNodeDecisionOutcome.getChars().toString();
         List<String> firstNodeLines = List.of(firstNodeText.split("\n"));
         String firstLine = firstNodeLines.get(0);
-        if (!DecisionOutcomeElements.CHOSEN_OPTION.matches(firstLine)) {
+        if (!DecisionOutcomeElements.CHOSEN_OPTION.matches(firstLine, true)) {
             String description = "Per convention, Chosen Option is always mentioned first in Decision Outcome section.\n";
             int lineNumber = getLineNumberByContent(decisionOutcome,
                 DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());

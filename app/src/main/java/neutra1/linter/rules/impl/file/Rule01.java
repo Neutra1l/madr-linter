@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl.atomic;
+package neutra1.linter.rules.impl.file;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import neutra1.linter.models.enums.MandatorySection;
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.HeadingRule;
-import neutra1.linter.rules.IAtomicRule;
+import neutra1.linter.rules.IFileRule;
 
-public class Rule01 extends HeadingRule implements IAtomicRule {
+public class Rule01 extends HeadingRule implements IFileRule {
 
     private final String RULE_ID_A = "MADR01a";
     private final String RULE_ID_B = "MADR01b";

@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl.atomic;
+package neutra1.linter.rules.impl.file;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,10 +8,10 @@ import com.vladsch.flexmark.ast.BulletListItem;
 
 import neutra1.linter.models.records.BulletListItemInfo;
 import neutra1.linter.models.records.Violation;
-import neutra1.linter.rules.IAtomicRule;
+import neutra1.linter.rules.IFileRule;
 import neutra1.linter.rules.SectionRule;
 
-public class Rule13 extends SectionRule implements IAtomicRule {
+public class Rule13 extends SectionRule implements IFileRule {
     
     private final String RULE_ID = "MADR13";
 

@@ -1,9 +1,9 @@
-package neutra1.linter.rules.impl.global;
+package neutra1.linter.rules.impl.directory;
 
-import neutra1.linter.rules.IGlobalRule;
+import neutra1.linter.rules.IDirectoryRule;
 import neutra1.linter.rules.NamingRule;
 
-public class Rule06 extends NamingRule implements IGlobalRule {
+public class Rule06 extends NamingRule implements IDirectoryRule {
 
     private final String RULE_ID = "MADR06";
    

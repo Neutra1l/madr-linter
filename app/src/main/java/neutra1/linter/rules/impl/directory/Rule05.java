@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl.global;
+package neutra1.linter.rules.impl.directory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -7,10 +7,10 @@ import java.util.List;
 
 import neutra1.linter.helper.LintContext;
 import neutra1.linter.models.records.Violation;
-import neutra1.linter.rules.IGlobalRule;
+import neutra1.linter.rules.IDirectoryRule;
 import neutra1.linter.rules.NamingRule;
 
-public class Rule05 extends NamingRule implements IGlobalRule {
+public class Rule05 extends NamingRule implements IDirectoryRule {
 
     private final String RULE_ID_A = "MADR05a";
     private final String RULE_ID_B = "MADR05b";

@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public enum DecisionOutcomeElements {
 
-    CHOSEN_OPTION(List.of("Chosen Option", "Chosen Alternative", "Selected", "Chosen", "We selected", "We chose", "We decided", "We want", "We use", "We select", "We opt")),
-    RATIONALE(List.of("Rationale", "Reasoning", "Reason", "Because", "Justification", "Motivation", "Motivated", "Due to"));
+    CHOSEN_OPTION(List.of("Chosen Option", "Chosen Alternative", "Selected Option")),
+    RATIONALE(List.of("Rationale", "Reasoning", "Reason", "Because", "Justification", "Motivation", "Motivated", "As"));
 
     private final List<String> keywords;
 
@@ -16,9 +16,12 @@ public enum DecisionOutcomeElements {
         this.keywords = keywords;
     } 
 
-    public boolean matches(String text) {
+    public boolean matches(String text, boolean ignoreCase) {
+        if (ignoreCase) {
+            text = text.toLowerCase();
+        }
         for (String keyword : keywords) {
-            if (text.contains(keyword)) {
+            if (text.contains(keyword.toLowerCase())) {
                 return true;
             }
         }
