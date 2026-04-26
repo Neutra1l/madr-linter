@@ -26,8 +26,9 @@ public class Rule07 extends HeadingRule implements IFileRule {
         List<HeadingInfo> headingList = traverser.getHeadingInfoList();
         int headingLevelOneCount = (int) headingList.stream().filter(headingInfo -> headingInfo.level() == 1).count();
         if (headingLevelOneCount > 1){
-            List<HeadingInfo> headingsLevelOne = headingList.stream().filter(headingInfo -> headingInfo.level() == 1).toList();
-            headingsLevelOne.sort(Comparator.comparingInt(HeadingInfo::startLineNumber));
+            List<HeadingInfo> headingsLevelOne = headingList.stream().
+                filter(headingInfo -> headingInfo.level() == 1).
+                sorted(Comparator.comparingInt(HeadingInfo::startLineNumber)).toList();
             List<HeadingInfo> violatingHeadings = headingsLevelOne.subList(1, headingsLevelOne.size());
             for (HeadingInfo heading : violatingHeadings){
                 int startLineNumber = heading.startLineNumber();
