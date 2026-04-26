@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl.atomic;
+package neutra1.linter.rules.impl.file;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,10 +12,10 @@ import neutra1.linter.models.enums.LinkType;
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.LinkInfo;
 import neutra1.linter.models.records.Violation;
-import neutra1.linter.rules.IAtomicRule;
+import neutra1.linter.rules.IFileRule;
 import neutra1.linter.rules.LinkRule;
 
-public class Rule14 extends LinkRule implements IAtomicRule {
+public class Rule14 extends LinkRule implements IFileRule {
 
     private final String RULE_ID_A = "MADR14a";
     private final String RULE_ID_B = "MADR14b";

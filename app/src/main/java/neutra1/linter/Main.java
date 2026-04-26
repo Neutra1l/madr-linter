@@ -14,23 +14,23 @@ import neutra1.linter.core.Reporter;
 import neutra1.linter.helper.IgnoreFileHandler;
 import neutra1.linter.helper.LintContext;
 import neutra1.linter.rules.AbstractRule;
-import neutra1.linter.rules.IAtomicRule;
-import neutra1.linter.rules.impl.atomic.Rule01;
-import neutra1.linter.rules.impl.atomic.Rule02;
-import neutra1.linter.rules.impl.atomic.Rule03;
-import neutra1.linter.rules.impl.atomic.Rule04;
-import neutra1.linter.rules.impl.atomic.Rule07;
-import neutra1.linter.rules.impl.atomic.Rule08;
-import neutra1.linter.rules.impl.atomic.Rule10;
-import neutra1.linter.rules.impl.atomic.Rule11;
-import neutra1.linter.rules.impl.atomic.Rule12;
-import neutra1.linter.rules.impl.atomic.Rule13;
-import neutra1.linter.rules.impl.atomic.Rule14;
-import neutra1.linter.rules.IGlobalRule;
-import neutra1.linter.rules.impl.global.Rule05;
-import neutra1.linter.rules.impl.global.Rule06;
-import neutra1.linter.rules.impl.global.Rule09;
-import neutra1.linter.rules.impl.global.Rule15;
+import neutra1.linter.rules.IFileRule;
+import neutra1.linter.rules.impl.file.Rule01;
+import neutra1.linter.rules.impl.file.Rule02;
+import neutra1.linter.rules.impl.file.Rule03;
+import neutra1.linter.rules.impl.file.Rule04;
+import neutra1.linter.rules.impl.file.Rule07;
+import neutra1.linter.rules.impl.file.Rule08;
+import neutra1.linter.rules.impl.file.Rule10;
+import neutra1.linter.rules.impl.file.Rule11;
+import neutra1.linter.rules.impl.file.Rule12;
+import neutra1.linter.rules.impl.file.Rule13;
+import neutra1.linter.rules.impl.file.Rule14;
+import neutra1.linter.rules.IDirectoryRule;
+import neutra1.linter.rules.impl.directory.Rule05;
+import neutra1.linter.rules.impl.directory.Rule06;
+import neutra1.linter.rules.impl.directory.Rule09;
+import neutra1.linter.rules.impl.directory.Rule15;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -97,7 +97,7 @@ public class Main implements Runnable {
             }
             try {
                 astTraverser.traverse(readFile(internalPath));
-                rules = rules.stream().filter(rule -> rule instanceof IAtomicRule).toList();
+                rules = rules.stream().filter(rule -> rule instanceof IFileRule).toList();
             }
             catch (IOException ioException){
                 System.out.println(RED + "Error: unable to read input file " + userPath + RESET);
@@ -105,7 +105,7 @@ public class Main implements Runnable {
             }
         }
         else if (Files.isDirectory(Paths.get(internalPath))){
-            rules = rules.stream().filter(rule -> rule instanceof IGlobalRule).toList(); 
+            rules = rules.stream().filter(rule -> rule instanceof IDirectoryRule).toList(); 
         }
         else {
             System.out.println(RED + "Error: Path " + userPath + " does not exist." + RESET);

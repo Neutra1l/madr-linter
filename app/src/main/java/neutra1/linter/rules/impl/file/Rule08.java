@@ -1,4 +1,4 @@
-package neutra1.linter.rules.impl.atomic;
+package neutra1.linter.rules.impl.file;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,10 +17,10 @@ import java.util.Map;
 import com.google.gson.Gson;
 import neutra1.linter.models.records.LinkInfo;
 import neutra1.linter.models.records.Violation;
-import neutra1.linter.rules.IAtomicRule;
+import neutra1.linter.rules.IFileRule;
 import neutra1.linter.rules.LinkRule;
 
-public class Rule08 extends LinkRule implements IAtomicRule {
+public class Rule08 extends LinkRule implements IFileRule {
 
     private final String RULE_ID = "MADR08"; 
     
