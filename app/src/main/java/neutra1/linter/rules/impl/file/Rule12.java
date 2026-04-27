@@ -74,7 +74,7 @@ public class Rule12 extends LinkRule implements IFileRule {
         buildDescription("Invalid local path detected: ", badLocalPaths, RULE_ID_A);
         buildDescription("Invalid anchor link detected: ", badAnchorLinks, RULE_ID_B);
         buildDescription("Invalid root relative path detected: ", badRootRelativePaths, RULE_ID_C);
-        buildDescription("Non-renderable absolute path detected:", badRootRelativePaths, RULE_ID_D);    
+        buildDescription("Non-renderable absolute path detected:", absolutePaths, RULE_ID_D);    
     } 
 
     private void buildDescription(String foreword, Map<String, Integer> brokenLinks, String ruleId){
