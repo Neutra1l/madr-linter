@@ -22,7 +22,7 @@ public class Rule43 extends NamingRule implements IDirectoryRule {
 
     @Override
     public int getRuleNumber(){
-        return 9;
+        return 43;
     }
 
     @Override

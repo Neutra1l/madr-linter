@@ -19,7 +19,7 @@ public class Rule31 extends SectionRule implements IFileRule {
 
     @Override
     public int getRuleNumber(){
-        return 13;
+        return 31;
     }
 
     @Override

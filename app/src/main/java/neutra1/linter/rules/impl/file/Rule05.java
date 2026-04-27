@@ -18,7 +18,7 @@ public class Rule05 extends HeadingRule implements IFileRule {
 
     @Override
     public int getRuleNumber(){
-        return 7;
+        return 5;
     }
 
     @Override

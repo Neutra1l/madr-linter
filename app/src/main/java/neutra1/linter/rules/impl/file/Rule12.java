@@ -28,7 +28,7 @@ public class Rule12 extends LinkRule implements IFileRule {
 
     @Override
     public int getRuleNumber(){
-        return 14;
+        return 12;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class Rule03 extends SectionRule implements IFileRule {
         }
         Node nodeDecisionOutcome = findNodeByKeywords(decisionOutcome.body(), DecisionOutcomeElements.CHOSEN_OPTION.getKeywords());
         if (nodeDecisionOutcome == null) {
-            String description = "Expected statement of chosen option inside Decision Outcome. Expected format: 'Chosen option: <chosen option>, because <rationale>')";
+            String description = "Expected statement of chosen option inside Decision Outcome. Expected format: 'Chosen option: <chosen option>, because <rationale>'";
             int lineNumber = decisionOutcome.startLineNumber();
             reporter.report(new Violation(RULE_ID_A, description, lineNumber));
             return;

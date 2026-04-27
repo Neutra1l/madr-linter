@@ -14,7 +14,7 @@ public class Rule44 extends NamingRule implements IDirectoryRule {
 
     @Override
     public int getRuleNumber(){
-        return 15;
+        return 44;
     }
 
     private void reportMadrsWithNamingViolations(){

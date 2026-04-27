@@ -19,7 +19,7 @@ public class Rule21 extends MetadataRule implements IFileRule {
 
     @Override
     public int getRuleNumber(){
-        return 12;
+        return 21;
     }
 
     @Override
