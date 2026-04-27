@@ -3,9 +3,9 @@ package neutra1.linter.rules.impl.directory;
 import neutra1.linter.rules.NamingRule;
 import neutra1.linter.rules.IDirectoryRule;
 
-public class Rule15 extends NamingRule implements IDirectoryRule {
+public class Rule44 extends NamingRule implements IDirectoryRule {
     
-    private final String RULE_ID = "MADR15";
+    private final String RULE_ID = "MADR44";
 
     @Override
     public void check(){

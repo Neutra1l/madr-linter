@@ -1,8 +1,7 @@
 package neutra1.linter.rules.impl.file;
 
-import java.util.Comparator;
-import java.util.List;
-
+import neutra1.linter.models.enums.MandatorySection;
+import neutra1.linter.models.enums.OptionalSection;
 import neutra1.linter.models.records.HeadingInfo;
 import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.HeadingRule;
@@ -10,7 +9,8 @@ import neutra1.linter.rules.IFileRule;
 
 public class Rule07 extends HeadingRule implements IFileRule {
 
-    private final String RULE_ID = "MADR07";
+    private final String RULE_ID_A = "MADR07a";
+    private final String RULE_ID_B = "MADR07b";
 
     public Rule07(){
         super();
@@ -18,23 +18,36 @@ public class Rule07 extends HeadingRule implements IFileRule {
 
     @Override
     public int getRuleNumber(){
-        return 7;
+        return 11;
     }
 
     @Override
     public void check(){
-        List<HeadingInfo> headingList = traverser.getHeadingInfoList();
-        int headingLevelOneCount = (int) headingList.stream().filter(headingInfo -> headingInfo.level() == 1).count();
-        if (headingLevelOneCount > 1){
-            List<HeadingInfo> headingsLevelOne = headingList.stream().
-                filter(headingInfo -> headingInfo.level() == 1).
-                sorted(Comparator.comparingInt(HeadingInfo::startLineNumber)).toList();
-            List<HeadingInfo> violatingHeadings = headingsLevelOne.subList(1, headingsLevelOne.size());
-            for (HeadingInfo heading : violatingHeadings){
-                int startLineNumber = heading.startLineNumber();
-                StringBuilder desc = new StringBuilder("Unexpected H1 heading: " + heading.text());
-                reporter.report(new Violation(RULE_ID, desc.toString(), startLineNumber));      
-            }
+        HeadingInfo decisionOutcome = getHeadingInfoByText(MandatorySection.DECISION_OUTCOME.getPermittedTitles(), true);
+        if (decisionOutcome == null){
+            return;
         }
+        String subsequenceDecisionOutcome = decisionOutcome.getBodyUnderHeading(true);
+        HeadingInfo consequences = getHeadingInfoByText(OptionalSection.CONSEQUENCES.getPermittedTitles(), true);
+        HeadingInfo confirmation = getHeadingInfoByText(OptionalSection.CONFIRMATION.getPermittedTitles(), true);
+        reportFalseParenthood(RULE_ID_A, subsequenceDecisionOutcome, consequences);
+        reportFalseParenthood(RULE_ID_B, subsequenceDecisionOutcome, confirmation);
+    }
+
+    private void reportFalseParenthood(String ruleId, String parentText, HeadingInfo childHeading){
+        if (childHeading == null){
+            return;
+        }
+        String rawTextChildHeading = childHeading.rawText();
+        if (!parentText.contains(rawTextChildHeading)){
+            String description;
+            if (ruleId.equals(this.RULE_ID_A)){
+                description = "Expected Consequences to be a H3 heading under Decision Outcome";
+            }
+            else {
+                description = "Expected Confirmation to be a H3 heading under Decision Outcome";
+            }
+            reporter.report(new Violation(ruleId, description, childHeading.startLineNumber()));
+        }  
     }
 }

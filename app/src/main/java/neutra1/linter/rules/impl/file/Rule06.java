@@ -7,11 +7,11 @@ import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.HeadingRule;
 import neutra1.linter.rules.IFileRule;
 
-public class Rule10 extends HeadingRule implements IFileRule {
+public class Rule06 extends HeadingRule implements IFileRule {
 
-    private final String RULE_ID = "MADR10";
+    private final String RULE_ID = "MADR06";
 
-    public Rule10(){
+    public Rule06(){
         super();
     }
 

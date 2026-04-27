@@ -9,11 +9,11 @@ import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.IFileRule;
 import neutra1.linter.rules.SectionRule;
 
-public class Rule13 extends SectionRule implements IFileRule {
+public class Rule31 extends SectionRule implements IFileRule {
     
-    private final String RULE_ID = "MADR13";
+    private final String RULE_ID = "MADR31";
 
-    public Rule13(){
+    public Rule31(){
         super();
     }
 

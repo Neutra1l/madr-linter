@@ -14,11 +14,11 @@ import neutra1.linter.models.records.Violation;
 import neutra1.linter.rules.IDirectoryRule;
 import neutra1.linter.rules.NamingRule;
 
-public class Rule09 extends NamingRule implements IDirectoryRule {
+public class Rule43 extends NamingRule implements IDirectoryRule {
 
-    private final String RULE_ID = "MADR09";
+    private final String RULE_ID = "MADR43";
 
-    public Rule09(){super();}
+    public Rule43(){super();}
 
     @Override
     public int getRuleNumber(){

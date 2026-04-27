@@ -19,18 +19,18 @@ import neutra1.linter.rules.impl.file.Rule01;
 import neutra1.linter.rules.impl.file.Rule02;
 import neutra1.linter.rules.impl.file.Rule03;
 import neutra1.linter.rules.impl.file.Rule04;
-import neutra1.linter.rules.impl.file.Rule07;
-import neutra1.linter.rules.impl.file.Rule08;
-import neutra1.linter.rules.impl.file.Rule10;
+import neutra1.linter.rules.impl.file.Rule05;
 import neutra1.linter.rules.impl.file.Rule11;
+import neutra1.linter.rules.impl.file.Rule06;
+import neutra1.linter.rules.impl.file.Rule07;
+import neutra1.linter.rules.impl.file.Rule21;
+import neutra1.linter.rules.impl.file.Rule31;
 import neutra1.linter.rules.impl.file.Rule12;
-import neutra1.linter.rules.impl.file.Rule13;
-import neutra1.linter.rules.impl.file.Rule14;
 import neutra1.linter.rules.IDirectoryRule;
-import neutra1.linter.rules.impl.directory.Rule05;
-import neutra1.linter.rules.impl.directory.Rule06;
-import neutra1.linter.rules.impl.directory.Rule09;
-import neutra1.linter.rules.impl.directory.Rule15;
+import neutra1.linter.rules.impl.directory.Rule41;
+import neutra1.linter.rules.impl.directory.Rule42;
+import neutra1.linter.rules.impl.directory.Rule43;
+import neutra1.linter.rules.impl.directory.Rule44;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -80,14 +80,14 @@ public class Main implements Runnable {
             new Rule05(),
             new Rule06(),
             new Rule07(),
-            new Rule08(),
-            new Rule09(),
-            new Rule10(),
             new Rule11(),
             new Rule12(),
-            new Rule13(),
-            new Rule14(),
-            new Rule15()
+            new Rule21(),
+            new Rule31(),
+            new Rule41(),
+            new Rule42(),
+            new Rule43(),
+            new Rule44()
         );
         
         if (Files.isRegularFile(Paths.get(internalPath))){

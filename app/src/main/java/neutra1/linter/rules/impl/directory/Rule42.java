@@ -3,11 +3,11 @@ package neutra1.linter.rules.impl.directory;
 import neutra1.linter.rules.IDirectoryRule;
 import neutra1.linter.rules.NamingRule;
 
-public class Rule06 extends NamingRule implements IDirectoryRule {
+public class Rule42 extends NamingRule implements IDirectoryRule {
 
-    private final String RULE_ID = "MADR06";
+    private final String RULE_ID = "MADR42";
    
-    public Rule06(){
+    public Rule42(){
         super();
     }
 
