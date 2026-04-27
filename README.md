@@ -28,35 +28,41 @@ Learn more about MADR [here](https://www.ozimmer.ch/practices/2022/11/22/MADRTem
                                suppressed.
 ```
 ## Rules
+
 ### Structural integrity
+
 ```
 01. Mandatory sections: Title (a), Context and Problem Statement (b),
     Considered Options (c), Decision Outcome (d) must be present.
 02. No sections may be empty.
 03. Chosen option must be mentioned first (b) inside Decision Outcome (a). Expected format: 'Chosen option: <chosen option>, because <rationale>'.
-04. Statement of chosen options must be followed by rationale in this format 'Chosen option: <chosen option>, because <rationale>'.
+04. Statement of chosen option must be followed by rationale in this format 'Chosen option: <chosen option>, because <rationale>'.
 05. Only the title is allowed to have heading level 1.
 06. Headings must have levels conforming to template's
 07. Consequences (a) and Confirmation (b), if present, must be H3 headings under Decision Outcome
 ```
 
 ### Link validity
+
 ```
 11. Internet links must be valid.
 12. Local links (Anchor links, local paths to resources, etc) must be valid.
 ```
 
 ### Syntactic validity
+
 ```
 21. Metadata content must have proper syntax adhering to YAML rules.
 ```
 
 ### Stylistic neutrality
+
 ```
 31. Asterisks (*) must be used as list markers.
 ```
 
 ### Organizational soundness
+
 ```
 41. The numberings of ADRs within the ADR directory must start with either 0000 or 
 0001 (a) and feature no skips (b).
