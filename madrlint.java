@@ -46,6 +46,7 @@
 //DEPS com.vladsch.flexmark:flexmark-ext-autolink:0.64.8
 //DEPS com.vladsch.flexmark:flexmark-ext-yaml-front-matter:0.64.8
 //DEPS com.github.sbaudoin:yamllint:1.6.1
+//DEPS com.google.code.gson:gson:2.13.2
 //COMPILE_OPTIONS -proc:full
 
 public class madrlint {
